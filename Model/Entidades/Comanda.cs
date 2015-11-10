@@ -44,6 +44,7 @@ namespace Model.Entidades
 
             }
         }
-       
+
+        public static int StaticID { get; set; }
     }
 }

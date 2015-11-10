@@ -17,12 +17,12 @@ namespace Controller.Repositorio
 
             _banco = new _DbContext();
         }
-        public List<Comanda> Inserir(List<Comanda> comandList,Comanda comanda)
+        public List<Comanda> Inserir(List<Comanda> comandList, Comanda comanda)
         {
             try
             {
                 InstanciarBanco();
-                
+
                 Comanda com = new Comanda();
                 if ((com = _banco.Comanda.FirstOrDefault(c => c.ID == comanda.ID)) != null)
                 {
@@ -35,9 +35,9 @@ namespace Controller.Repositorio
                         MyErro.MyCustomException("Comanda já foi adicionada");
                     }
                 }
-               
+
                 return comandList;
-               
+
             }
             catch (CustomException erro)
             {
@@ -50,11 +50,31 @@ namespace Controller.Repositorio
 
         }
 
+        public void PesquisarPorCodigoPesquisar(DataGridView dgv, string codigoComanda)
+        {
+
+            try
+            {
+                InstanciarBanco();
+                dgv.DataSource = (from com in _banco.Comanda where com.Codigo.Contains(codigoComanda) select new { ID = com.ID, Código = com.Codigo }).ToList();
+
+            }
+            catch (CustomException error)
+            {
+                throw new CustomException(error.Message);
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+
+        }
+
         public bool SeExiste(Comanda comanda)
         {
             try
             {
-                InstanciarBanco();                
+                InstanciarBanco();
                 return _banco.Comanda.FirstOrDefault(c => c.ID == comanda.ID) != null ? Existe : NaoExiste;
 
             }
@@ -86,16 +106,23 @@ namespace Controller.Repositorio
                 throw new Exception(erro.Message);
             }
 
-            
+
         }
 
-        public void PesquisarPorCodigo(DataGridView dgv, string codigoComanda)
+        /*public void PesquisarPorCodigoSelecionar(DataGridView dgv, string codigoComanda)
         {
             try
             {
                 InstanciarBanco();
-                dgv.DataSource = (from com in _banco.Comanda where com.Codigo.Contains(codigoComanda) select new { ID = com.ID, Código = com.Codigo }).ToList();
-
+                dgv.DataSource = _banco.Comanda.ToList(); (from ven in _banco.VendaComComandaAtiva
+                                  join com in _banco.Comanda
+                                  on ven.IDComanda equals com.ID
+                                  select new
+                                  {
+                                      ID = com.ID,
+                                      Código = com.Codigo,
+                                      Valor = ven.PrecoTotal
+                                  }).ToList();
 
             }
             catch (CustomException erro)
@@ -106,6 +133,6 @@ namespace Controller.Repositorio
             {
                 throw new Exception(erro.Message);
             }
-        }
+        }*/
     }
 }

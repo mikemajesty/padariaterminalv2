@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using UI.View.Enum;
+using UI.View.UI.ViewComanda;
 using UI.View.UI.ViewProduto;
 
 namespace View.UI.ViewTerminal
@@ -63,25 +64,7 @@ namespace View.UI.ViewTerminal
 
                 if ((Keys)e.KeyChar == Keys.Enter)
                 {
-                    InstanciarComandaRepositorio();
-                    InstanciarVendaComComandaAtivaRepositorio();
-                    if (txtIDdaComanda.Text.Length > 0)
-                    {
-
-                        if (_comandaRepositorio.SeExiste(new Comanda() { ID = Convert.ToInt32(txtIDdaComanda.Text) }) == Existe)
-                        {
-                            MostrarPanel(pnlTudo);
-                            DesabilitarTextBox(new List<TextBox>() { txtIDdaComanda });
-                            FocarNoTxt(txtQuantidade);
-                            CarregarComanda();
-                            CarregarTxtQuantidadeComUm();
-                        }
-                        else
-                        {
-                            MyErro.MyCustomException("Comanda não cadastrada.");
-                        }
-
-                    }
+                    CarregarFormComanda();
                 }
 
 
@@ -100,6 +83,67 @@ namespace View.UI.ViewTerminal
 
         }
 
+        private void CarregarFormComanda()
+        {
+
+            try
+            {
+
+                if (txtIDdaComanda.Text.Trim().Length == 0)
+                {
+                    if (OpenMdiForm.OpenForWithShowDialog(new frmPesquisarComanda()) == DialogResult.Yes)
+                    {
+                        if (Comanda.StaticID > 0)
+                        {
+                            txtIDdaComanda.Text = Comanda.StaticID.ToString();
+                            InstanciarComandaRepositorio();
+                            InstanciarVendaComComandaAtivaRepositorio();
+                            if (txtIDdaComanda.Text.Length > 0)
+                            {
+                                if (_comandaRepositorio.SeExiste(new Comanda() { ID = Convert.ToInt32(txtIDdaComanda.Text) }) == Existe)
+                                {
+                                    MostrarPanel(pnlTudo);
+                                    DesabilitarTextBox(new List<TextBox>() { txtIDdaComanda });
+                                    FocarNoTxt(txtQuantidade);
+                                    CarregarComanda();
+                                    CarregarTxtQuantidadeComUm();
+                                }
+                            }
+                            SendKeys.SendWait("{ENTER}");
+                        }
+
+                    }
+                }
+                else
+                {
+
+                    InstanciarComandaRepositorio();
+                    InstanciarVendaComComandaAtivaRepositorio();
+                    if (txtIDdaComanda.Text.Length > 0)
+                    {
+                        if (_comandaRepositorio.SeExiste(new Comanda() { ID = Convert.ToInt32(txtIDdaComanda.Text) }) == Existe)
+                        {
+                            MostrarPanel(pnlTudo);
+                            DesabilitarTextBox(new List<TextBox>() { txtIDdaComanda });
+                            FocarNoTxt(txtQuantidade);
+                            CarregarComanda();
+                            CarregarTxtQuantidadeComUm();
+                        }
+                    }
+                    SendKeys.SendWait("{ENTER}");
+                }
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+
+        }
+
         private void CarregarComanda()
         {
 
@@ -107,7 +151,7 @@ namespace View.UI.ViewTerminal
             {
                 int ID = Convert.ToInt32(txtIDdaComanda.Text);
                 _vendaComComandaATivaRepositorio.GetItensnaComandaPorID(ID, ltvProdutos);
-                MyListView.GetValorNaComanda(ltvProdutos, 3, lblTotalVenda);
+                MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
 
             }
             catch (CustomException erro)
@@ -215,36 +259,49 @@ namespace View.UI.ViewTerminal
                     {
 
                         decimal peso = 0;
-                        if (txtPesoDoProduto.Text.Contains("0,"))
+                        string pesoDigitado = txtPesoDoProduto.Text.Trim();
+                        string codigo = txtCodigoDoProduto.Text.Trim();
+                        if (pesoDigitado.Contains("0,"))
                         {
-                            string temp = txtPesoDoProduto.Text.Substring(2, txtPesoDoProduto.Text.Length - 2);
-                            peso = txtPesoDoProduto.Text == "" ? 0 : Convert.ToDecimal(temp);
+                            string temp = pesoDigitado.Substring(2, pesoDigitado.Length - 2);
+                            peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(temp);
                         }
                         else
                         {
-                            peso = txtPesoDoProduto.Text == "" ? 0 : Convert.ToDecimal(txtPesoDoProduto.Text.Replace(",", ""));
+                            peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(pesoDigitado.Replace(",", ""));
                         }
                         if (peso > 0)
                         {
                             InstanciarProdutoRepositorio();
-                            Produto produto = _produtoRepositorio.AdicionarProdutoParaVendaPorPeso(ltvProdutos, txtCodigoDoProduto.Text, peso);
-                            if (produto != null)
+                            if (_produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == true)
                             {
-                                InstanciarVendaComComandaAtivaRepositorio();
-                                _vendaComComandaATivaRepositorio.Cadastrar(PupularVendaComComandaAtivaPeso(produto, peso));
-                                MyListView.GetValorNaComanda(ltvProdutos, 3, lblTotalVenda);
+                                Produto produto = _produtoRepositorio.AdicionarProdutoParaVendaPorPeso(ltvProdutos, txtCodigoDoProduto.Text, peso);
+                                if (produto != null)
+                                {
+                                    InstanciarVendaComComandaAtivaRepositorio();
+                                    _vendaComComandaATivaRepositorio.Cadastrar(PupularVendaComComandaAtivaPeso(produto, peso));
+                                    MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
+                                    DesmarcarCheckBox();
+                                    LimparTxt(new List<TextBox>() { txtCodigoDoProduto, txtPesoDoProduto });
+                                    PosSalvamento();
+                                    CarregarTxtQuantidadeComUm();
+                                    timer1.Start();
+                                    DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
+                                }
+                            }
+                            else
+                            {
                                 DesmarcarCheckBox();
-                                LimparTxt(new List<TextBox>() { txtCodigoDoProduto, txtPesoDoProduto });
-                                PosSalvamento();
-                                CarregarTxtQuantidadeComUm();
-                                timer1.Start();
-                                DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
+                                FocarNoTxt(txtCodigoDoProduto);
+                                txtCodigoDoProduto.Text = codigo;
+                                SendKeys.SendWait("{Enter}");
+                                LimparTxt(new List<TextBox>{ txtCodigoDoProduto});
                             }
 
                         }
                         else
                         {
-                            MyErro.MyCustomException("Digite o valor do item vendido.");
+                            MyErro.MyCustomException("Digite o peso do item vendido.");
                             FocarNoTxt(txtPesoDoProduto);
                         }
                     }
@@ -267,7 +324,7 @@ namespace View.UI.ViewTerminal
 
                             DesmarcarCheckBox();
                             LimparTxt(new List<TextBox>() { txtPesoDoProduto });
-                            MyListView.GetValorNaComanda(ltvProdutos, 3, lblTotalVenda);
+                            MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
                             PosSalvamento();
                             CarregarTxtQuantidadeComUm();
                             timer1.Start();
@@ -471,11 +528,22 @@ namespace View.UI.ViewTerminal
 
         }
 
+        private void txtIDdaComanda_DoubleClick(object sender, EventArgs e)
+        {
 
+            try
+            {
+                CarregarFormComanda();
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
 
-
-
-
-
+        }
     }
 }

@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\EnumComanda.cs" />
     <Compile Include="Enum\EnumTipoCadastro.cs" />
     <Compile Include="Enum\EnumTipoPesquisa.cs" />
     <Compile Include="UI\Comanda\frmPesquisarComanda.cs">

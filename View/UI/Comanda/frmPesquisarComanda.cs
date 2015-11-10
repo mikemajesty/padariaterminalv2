@@ -1,8 +1,10 @@
 ﻿using Controller.Repositorio;
 using Mike.Utilities.Desktop;
+using Model.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using UI.View.Enum;
 
 namespace UI.View.UI.ViewComanda
 {
@@ -23,15 +25,8 @@ namespace UI.View.UI.ViewComanda
 
             try
             {
-
-                InstanciarComandaRepositorio();
-                if (_comandaRepositorio.GetQuantidade() > 0)
-                {
-                    string codigo = txtPesquisar.Text == Vazio ? "" : txtPesquisar.Text;
-                    _comandaRepositorio.PesquisarPorCodigo(dgv: dgvComanda, codigoComanda: codigo);
-                    AjustarTamanhoDoGrid();
-                }
-
+                PesquisarECarregar();
+               
             }
             catch (CustomException erro)
             {
@@ -41,6 +36,30 @@ namespace UI.View.UI.ViewComanda
             {
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
+
+        }
+
+        private void PesquisarECarregar()
+        {
+
+            try
+            {
+                string codigo = txtPesquisar.Text.Trim();
+                InstanciarComandaRepositorio();
+                _comandaRepositorio.
+                    PesquisarPorCodigoPesquisar(dgv: dgvComanda, codigoComanda: codigo);
+                AjustarTamanhoDoGrid();
+                dgvComanda.PadronizarGrid();
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+
 
         }
 
@@ -55,10 +74,7 @@ namespace UI.View.UI.ViewComanda
 
             try
             {
-
-                InstanciarComandaRepositorio();
-                _comandaRepositorio.PesquisarPorCodigo(dgv: dgvComanda, codigoComanda: "");
-                AjustarTamanhoDoGrid();
+                PesquisarECarregar();
 
             }
             catch (CustomException erro)
@@ -74,6 +90,7 @@ namespace UI.View.UI.ViewComanda
 
         private void AjustarTamanhoDoGrid()
         {
+
             dgvComanda.AjustartamanhoDoDataGridView(new List<TamanhoGrid>()
                 {
                     new TamanhoGrid(){ ColunaNome = "ID", Tamanho = 173},
@@ -82,6 +99,42 @@ namespace UI.View.UI.ViewComanda
 
         }
 
+        private void dgvComanda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
 
+            try
+            {
+                InstanciarComandaRepositorio();
+                if (e.RowIndex >= 0)
+                {
+                    if (_comandaRepositorio.GetQuantidade() > 0)
+                    {
+                        Comanda.StaticID = Convert.ToInt32(dgvComanda.CurrentRow.Cells["ID"].Value);
+                        if (Comanda.StaticID > 0)
+                        {
+                            this.DialogResult = DialogResult.Yes;
+                        }
+                        else
+                        {
+                            this.DialogResult = DialogResult.No;
+                        }
+                    }
+                    else
+                    {
+                        MyErro.MyCustomException("Não existe comanda cadastrada.");
+                    }
+                }
+              
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+
+        }
     }
 }

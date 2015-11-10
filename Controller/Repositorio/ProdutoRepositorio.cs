@@ -16,7 +16,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 return _banco.Produto.Count();
 
             }
@@ -30,7 +30,7 @@ namespace Controller.Repositorio
             }
         }
 
-        private void InstanciarDbContext()
+        private void InstanciarBanco()
         {
             _banco = new _DbContext();
         }
@@ -38,7 +38,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();                
+                InstanciarBanco();
                 _banco.Entry(produto).State = EntityState.Modified;
                 return _banco.SaveChanges();
 
@@ -58,7 +58,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 dgv.DataSource = (from prod in _banco.Produto
                                   join cat in _banco.Categoria on prod.Categoria equals cat.ID
                                   select new
@@ -87,7 +87,7 @@ namespace Controller.Repositorio
 
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 dgv.DataSource = ((from prod in _banco.Produto
                                    join cat in _banco.Categoria on prod.Categoria equals cat.ID
                                    select new
@@ -129,7 +129,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 dgv.DataSource = (from prod in _banco.Produto
                                   join cat in _banco.Categoria on prod.Categoria equals cat.ID
                                   select new
@@ -157,7 +157,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 dgv.DataSource = (from prod in _banco.Produto
                                   join cat in _banco.Categoria on prod.Categoria equals cat.ID
                                   select new
@@ -207,7 +207,7 @@ namespace Controller.Repositorio
                                       ,
                                       Total = (prod.PrecoVenda / 1000) * peso
                                       ,
-                                      LucroTotal = ((((prod.PrecoVenda / 1000) * peso ) * 100) / prod.Porcentagem)
+                                      LucroTotal = ((((prod.PrecoVenda / 1000) * peso) * 100) / prod.Porcentagem)
                                   }).Where(c => c.Codigo == codigo);
 
                         AdicionarItensNoListView(ltv, _venda);
@@ -235,7 +235,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 InstanciarTipoCadastroRepositorio();
 
                 if (_banco.Produto.FirstOrDefault(c => c.Codigo == codigo) != null)
@@ -268,13 +268,36 @@ namespace Controller.Repositorio
             }
         }
 
+        public bool VerificarSeProdutoVendidoPorPeso(string codigo)
+        {
 
+            try
+            {
+                InstanciarBanco();
+                InstanciarTipoCadastroRepositorio();
+                if (this.GetProdutoPorCodigo(codigo) != null)
+                {
+                    int idTipoCadastro = _tipoCadastroRepositorio.GetIDPeloNome("Peso");
+                    return _banco.Produto.Any(c => c.TipoCadastro == idTipoCadastro && c.Codigo == codigo);
+                }                
+                throw new CustomException("Esse produto não esta cadastrado.");
+            }
+            catch (CustomException error)
+            {
+                throw new CustomException(error.Message);
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+
+        }
 
         private Produto GetProdutoPorCodigoUnidade(string codigo)
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 InstanciarTipoCadastroRepositorio();
                 if (_banco.Produto.FirstOrDefault(c => c.Codigo == codigo) != null)
                 {
@@ -411,7 +434,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 Produto prod = _banco.Produto.FirstOrDefault(c => c.Codigo == codigo);
                 if (prod != null)
                 {
@@ -439,7 +462,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 Produto prod = _banco.Produto.FirstOrDefault(c => c.ID == idProduto);
                 if (prod != null)
                 {
@@ -468,7 +491,7 @@ namespace Controller.Repositorio
             try
             {
 
-                InstanciarDbContext();
+                InstanciarBanco();
                 InstanciarTipoCadastroRepositorio();
                 int IDTipoCadastro = _tipoCadastroRepositorio.GetIDPeloNome("Unidade");
                 dgv.DataSource = (from prod in _banco.Produto
@@ -503,7 +526,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 InstanciarTipoCadastroRepositorio();
                 int IDTipoCadastro = _tipoCadastroRepositorio.GetIDPeloNome("Unidade");
                 dgv.DataSource = (from prod in _banco.Produto
@@ -536,7 +559,7 @@ namespace Controller.Repositorio
         {
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 InstanciarTipoCadastroRepositorio();
                 int IDTipoCadastro = _tipoCadastroRepositorio.GetIDPeloNome("Unidade");
                 dgv.DataSource = (from prod in _banco.Produto
@@ -570,7 +593,7 @@ namespace Controller.Repositorio
 
             try
             {
-                InstanciarDbContext();
+                InstanciarBanco();
                 InstanciarTipoCadastroRepositorio();
                 int IDTipoCadastro = _tipoCadastroRepositorio.GetIDPeloNome("Unidade");
                 dgv.DataSource = ((from prod in _banco.Produto

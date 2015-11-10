@@ -42,8 +42,8 @@ namespace UI.View
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
-           
-           
+
+
         }
         private void CarregarTipoDeCadastro()
         {
@@ -51,7 +51,7 @@ namespace UI.View
             {
                 InstanciarTipoCadastroRepositorio();
                 _tipoCadastroRepositorio.Cadastrar();
-               
+
             }
             catch (CustomException erro)
             {
@@ -85,7 +85,7 @@ namespace UI.View
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
-           
+
         }
 
         private void menuSair_Click(object sender, EventArgs e)
@@ -119,7 +119,7 @@ namespace UI.View
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
-            
+
         }
 
         private void btnGerenciarEstoque_Click(object sender, EventArgs e)
@@ -147,13 +147,13 @@ namespace UI.View
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
-           
+
         }
 
         private void Menu_Load(object sender, EventArgs e)
         {
 
-  try
+            try
             {
 
                 CarregarTipoDeCadastro();
@@ -168,7 +168,7 @@ namespace UI.View
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
-            
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)

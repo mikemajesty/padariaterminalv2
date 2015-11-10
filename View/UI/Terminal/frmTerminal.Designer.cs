@@ -39,6 +39,7 @@
             this.lblTotalVenda = new System.Windows.Forms.Label();
             this.pnlTudo = new System.Windows.Forms.Panel();
             this.gpbValorPorPeso = new System.Windows.Forms.GroupBox();
+            this.ptbValorpagoPorPeso = new System.Windows.Forms.PictureBox();
             this.txtPesoDoProduto = new System.Windows.Forms.TextBox();
             this.ckbPorPeso = new System.Windows.Forms.CheckBox();
             this.gpbCodigoDoProduto = new System.Windows.Forms.GroupBox();
@@ -48,17 +49,16 @@
             this.ptbQuantidade = new System.Windows.Forms.PictureBox();
             this.txtQuantidade = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ptbValorpagoPorPeso = new System.Windows.Forms.PictureBox();
             this.gpbSelecionarIDDaComanda.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbIdDaComanda)).BeginInit();
             this.gpbTotal.SuspendLayout();
             this.pnlTudo.SuspendLayout();
             this.gpbValorPorPeso.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptbValorpagoPorPeso)).BeginInit();
             this.gpbCodigoDoProduto.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbCodigoDoProduto)).BeginInit();
             this.gpbQuantidadeDoProduto.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbQuantidade)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptbValorpagoPorPeso)).BeginInit();
             this.SuspendLayout();
             // 
             // gpbSelecionarIDDaComanda
@@ -104,6 +104,7 @@
             this.txtIDdaComanda.Size = new System.Drawing.Size(345, 38);
             this.txtIDdaComanda.TabIndex = 0;
             this.txtIDdaComanda.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtIDdaComanda.DoubleClick += new System.EventHandler(this.txtIDdaComanda_DoubleClick);
             this.txtIDdaComanda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtIDdaComanda_KeyPress);
             // 
             // ltvProdutos
@@ -169,6 +170,16 @@
             this.gpbValorPorPeso.TabStop = false;
             this.gpbValorPorPeso.Text = "Peso do produto";
             // 
+            // ptbValorpagoPorPeso
+            // 
+            this.ptbValorpagoPorPeso.Image = ((System.Drawing.Image)(resources.GetObject("ptbValorpagoPorPeso.Image")));
+            this.ptbValorpagoPorPeso.Location = new System.Drawing.Point(237, 34);
+            this.ptbValorpagoPorPeso.Name = "ptbValorpagoPorPeso";
+            this.ptbValorpagoPorPeso.Size = new System.Drawing.Size(32, 38);
+            this.ptbValorpagoPorPeso.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ptbValorpagoPorPeso.TabIndex = 14;
+            this.ptbValorpagoPorPeso.TabStop = false;
+            // 
             // txtPesoDoProduto
             // 
             this.txtPesoDoProduto.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -183,7 +194,8 @@
             // ckbPorPeso
             // 
             this.ckbPorPeso.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckbPorPeso.Font = new System.Drawing.Font("Modern No. 20", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckbPorPeso.BackColor = System.Drawing.Color.LightGray;
+            this.ckbPorPeso.Font = new System.Drawing.Font("Arial Black", 12F, System.Drawing.FontStyle.Bold);
             this.ckbPorPeso.Image = ((System.Drawing.Image)(resources.GetObject("ckbPorPeso.Image")));
             this.ckbPorPeso.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckbPorPeso.Location = new System.Drawing.Point(6, 7);
@@ -191,8 +203,8 @@
             this.ckbPorPeso.Size = new System.Drawing.Size(135, 74);
             this.ckbPorPeso.TabIndex = 22;
             this.ckbPorPeso.TabStop = false;
-            this.ckbPorPeso.Text = "Por Peso";
-            this.ckbPorPeso.UseVisualStyleBackColor = true;
+            this.ckbPorPeso.Text = "Peso [F2]";
+            this.ckbPorPeso.UseVisualStyleBackColor = false;
             this.ckbPorPeso.CheckedChanged += new System.EventHandler(this.ckbPorPeso_CheckedChanged);
             // 
             // gpbCodigoDoProduto
@@ -266,16 +278,6 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // ptbValorpagoPorPeso
-            // 
-            this.ptbValorpagoPorPeso.Image = ((System.Drawing.Image)(resources.GetObject("ptbValorpagoPorPeso.Image")));
-            this.ptbValorpagoPorPeso.Location = new System.Drawing.Point(237, 34);
-            this.ptbValorpagoPorPeso.Name = "ptbValorpagoPorPeso";
-            this.ptbValorpagoPorPeso.Size = new System.Drawing.Size(32, 38);
-            this.ptbValorpagoPorPeso.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.ptbValorpagoPorPeso.TabIndex = 14;
-            this.ptbValorpagoPorPeso.TabStop = false;
-            // 
             // frmTerminal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -292,7 +294,7 @@
             this.MinimizeBox = false;
             this.Name = "frmTerminal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Terminal de venda";
+            this.Text = " ";
             this.Load += new System.EventHandler(this.frmTerminal_Load);
             this.gpbSelecionarIDDaComanda.ResumeLayout(false);
             this.gpbSelecionarIDDaComanda.PerformLayout();
@@ -301,13 +303,13 @@
             this.pnlTudo.ResumeLayout(false);
             this.gpbValorPorPeso.ResumeLayout(false);
             this.gpbValorPorPeso.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptbValorpagoPorPeso)).EndInit();
             this.gpbCodigoDoProduto.ResumeLayout(false);
             this.gpbCodigoDoProduto.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbCodigoDoProduto)).EndInit();
             this.gpbQuantidadeDoProduto.ResumeLayout(false);
             this.gpbQuantidadeDoProduto.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbQuantidade)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptbValorpagoPorPeso)).EndInit();
             this.ResumeLayout(false);
 
         }
