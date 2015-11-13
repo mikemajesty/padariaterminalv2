@@ -76,14 +76,9 @@ namespace Controller.Repositorio
                 {
                     listView = new ListViewItem(item.Nome);
                     listView.SubItems.Add(item.Codigo);
-                    if (item.Quantidade < 0)
+                    if (item.Quantidade == 0)
                     {
-                        string pesoTemp = item.Quantidade.ToString().Replace("-", "");
-                        string peso = pesoTemp.Length == 1 ?
-                            "0,00" + pesoTemp + " Kg" : pesoTemp.Length == 2 ?
-                            "0,0" + pesoTemp + " Kg" : pesoTemp.Length == 3 ?
-                            "0," + pesoTemp + " Kg" : pesoTemp.Length == 4 ? pesoTemp.Insert(1, ",") + " Kg" : pesoTemp.Length == 5 ? pesoTemp.Insert(2, ",") + " Kg" : pesoTemp;
-                        listView.SubItems.Add(peso);
+                        listView.SubItems.Add("Peso");
                     }
                     else
                     {
@@ -136,13 +131,14 @@ namespace Controller.Repositorio
                 Produto produto;
                 if ((produto = _banco.Produto.FirstOrDefault(c => c.ID == IDProduto)) != null)
                 {
+                    
                     VendaComComandaAtiva venda = _banco.VendaComComandaAtiva.FirstOrDefault(c => c.IDComanda == IDComanda && c.Quantidade == quantidade && c.IDProduto == produto.ID);
                     if (venda != null)
                     {
                         _banco.Entry(venda).State = EntityState.Deleted;
                         retorno = _banco.SaveChanges();
                     }
-
+                 
                 }
                 return retorno;
 

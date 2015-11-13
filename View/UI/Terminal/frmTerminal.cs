@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using UI.View.Enum;
 using UI.View.UI.ViewComanda;
 using UI.View.UI.ViewProduto;
-using View.UI.ViewProduto;
 
 namespace View.UI.ViewTerminal
 {
@@ -56,92 +55,6 @@ namespace View.UI.ViewTerminal
         {
             pnl.Visible = false;
         }
-
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            switch (keyData)
-            {
-
-
-                case Keys.F1:
-                    FocarNoTxt(txtIDdaComanda);
-                    break;
-                case Keys.F2:
-                    btnModificarComanda.PerformClick();
-                    break;
-                case Keys.F3:
-                    MarcarDesmarcarCkb();
-                    break;
-                case Keys.F4:
-                    if (ckbPorPeso.Checked == false)
-                    {
-                        ckbPorPeso.Checked = true;
-                    }
-                    FocarNoTxt(txtPesoDoProduto);
-                    break;
-                case Keys.F5:
-                    if (ckbPorPeso.Checked == true)
-                    {
-                        ckbPorPeso.Checked = false;
-                    }
-                    FocarNoTxt(txtQuantidade);
-                    break;
-                case Keys.F6:
-                    FocarNoTxt(txtCodigoDoProduto);
-                    break;
-                case Keys.F7:
-                    break;
-                case Keys.F8:
-                    break;
-                case Keys.F9:
-                    break;
-                case Keys.F10:
-                    break;
-                case Keys.F11:
-                    break;
-                case Keys.F12:
-                    break;
-                case Keys.F13:
-                    break;
-                case Keys.F14:
-                    break;
-                case Keys.F15:
-                    break;
-                case Keys.F16:
-                    break;
-                case Keys.F17:
-                    break;
-                case Keys.F18:
-                    break;
-                case Keys.F19:
-                    break;
-                case Keys.F20:
-                    break;
-                case Keys.F21:
-                    break;
-                case Keys.F22:
-                    break;
-                case Keys.F23:
-                    break;
-                case Keys.F24:
-                    break;
-
-
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-
-        private void MarcarDesmarcarCkb()
-        {
-            if (ckbPorPeso.Visible == true)
-            {
-                ckbPorPeso.Checked = ckbPorPeso.Checked == true
-                      && ckbPorPeso.Visible == true ? false : true;
-            }
-
-        }
-
 
         private void txtIDdaComanda_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -253,17 +166,28 @@ namespace View.UI.ViewTerminal
         }
 
         private void DesabilitarTextBox(List<TextBox> list)
-                    => list.ForEach(c => c.Enabled = false);
+        {
+            foreach (var txt in list)
+            {
+                txt.Enabled = false;
+            }
+        }
 
         private void DesbilitarGroupBox(List<GroupBox> list)
-                    => list.ForEach(c => c.Enabled = false);
-
-
+        {
+            foreach (var gpb in list)
+            {
+                gpb.Enabled = false;
+            }
+        }
 
         private void LimparTxt(List<TextBox> list)
-                    => list.ForEach(c => c.Text = string.Empty);
-
-
+        {
+            foreach (var txt in list)
+            {
+                txt.LimparTxt();
+            }
+        }
 
         private void FocarNoTxt(TextBox txtIDdaComanda)
         {
@@ -300,20 +224,18 @@ namespace View.UI.ViewTerminal
         }
         private void txtValorDoProdutoPorpeso_KeyPress(object sender, KeyPressEventArgs e)
         {
-           
-            if (txtPesoDoProduto.Text.Trim().Length == 0)
-            {
-                FocarNoTxt(txtCodigoDoProduto);
-            }
-            else
+            ValidatorField.Peso(e: e, sender: sender);
+            if ((Keys)e.KeyChar == Keys.Enter)
             {
                 if (gpbQuantidadeDoProduto.Visible == true)
                 {
                     FocarNoTxt(txtQuantidade);
                 }
-
+                else
+                {
+                    FocarNoTxt(txtCodigoDoProduto);
+                }
             }
-            ValidatorField.Peso(e: e, sender: sender);
         }
 
         private void txtQuantidade_KeyPress(object sender, KeyPressEventArgs e)
@@ -333,18 +255,85 @@ namespace View.UI.ViewTerminal
                 ValidatorField.IntegerAndLetter(e);
                 if ((Keys)e.KeyChar == Keys.Enter)
                 {
-                    if (txtCodigoDoProduto.Text.Trim().Length == 0)
+                    if (ckbPorPeso.Checked)
                     {
-                        if (OpenMdiForm.OpenForWithShowDialog(new frmPesquisarProduto(EnumTipoPesquisa.ProdutoTerminal)) == DialogResult.Yes)
+
+                        decimal peso = 0;
+                        string pesoDigitado = txtPesoDoProduto.Text.Trim();
+                        string codigo = txtCodigoDoProduto.Text.Trim();
+                        if (pesoDigitado.Contains("0,"))
                         {
-                            CarregarProduto(codigo: Produto.StaticCodigo);
+                            string temp = pesoDigitado.Substring(2, pesoDigitado.Length - 2);
+                            peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(temp);
+                        }
+                        else
+                        {
+                            peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(pesoDigitado.Replace(",", ""));
+                        }
+                        if (peso > 0)
+                        {
+                            InstanciarProdutoRepositorio();
+                            if (_produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == true)
+                            {
+                                Produto produto = _produtoRepositorio.AdicionarProdutoParaVendaPorPeso(ltvProdutos, txtCodigoDoProduto.Text, peso);
+                                if (produto != null)
+                                {
+                                    InstanciarVendaComComandaAtivaRepositorio();
+                                    _vendaComComandaATivaRepositorio.Cadastrar(PupularVendaComComandaAtivaPeso(produto, peso));
+                                    MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
+                                    DesmarcarCheckBox();
+                                    LimparTxt(new List<TextBox>() { txtCodigoDoProduto, txtPesoDoProduto });
+                                    PosSalvamento();
+                                    CarregarTxtQuantidadeComUm();
+                                    timer1.Start();
+                                    DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
+                                }
+                            }
+                            else
+                            {
+                                DesmarcarCheckBox();
+                                FocarNoTxt(txtCodigoDoProduto);
+                                txtCodigoDoProduto.Text = codigo;
+                                SendKeys.SendWait("{Enter}");
+                                LimparTxt(new List<TextBox>{ txtCodigoDoProduto});
+                            }
+
+                        }
+                        else
+                        {
+                            MyErro.MyCustomException("Digite o peso do item vendido.");
+                            FocarNoTxt(txtPesoDoProduto);
                         }
                     }
                     else
                     {
-                        CarregarProduto(codigo: txtCodigoDoProduto.Text.Trim());
+
+                        InstanciarProdutoRepositorio();
+                        InstanciarVendaComComandaAtivaRepositorio();
+                        Produto produto = _produtoRepositorio.AdicionarProdutoNoListViewSemComanda(ltv: ltvProdutos, codigo: txtCodigoDoProduto.Text, quantidade: Convert.ToInt32(txtQuantidade.Text));
+                        if (produto != null)
+                        {
+                            _vendaComComandaATivaRepositorio.Cadastrar(new VendaComComandaAtiva()
+                            {
+                                IDComanda = Convert.ToInt32(txtIDdaComanda.Text),
+                                IDProduto = produto.ID,
+                                PrecoTotal = produto.PrecoVenda * Convert.ToInt32(txtQuantidade.Text),
+                                Quantidade = Convert.ToInt32(txtQuantidade.Text)
+                            });
+                            LimparTxt(new List<TextBox>() { txtCodigoDoProduto });
+
+                            DesmarcarCheckBox();
+                            LimparTxt(new List<TextBox>() { txtPesoDoProduto });
+                            MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
+                            PosSalvamento();
+                            CarregarTxtQuantidadeComUm();
+                            timer1.Start();
+                            DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
+                        }
+
 
                     }
+
 
 
                 }
@@ -363,103 +352,17 @@ namespace View.UI.ViewTerminal
 
         }
 
-        private void CarregarProduto(string codigo)
-        {
-
-            try
-            {
-                if (ckbPorPeso.Checked)
-                {
-                    decimal peso = 0;
-                    string pesoDigitado = txtPesoDoProduto.Text.Trim();                 
-                    peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(pesoDigitado.Replace(",", ""));
-                    if (peso > 0)
-                    {
-                        InstanciarProdutoRepositorio();
-                        if (_produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == true)
-                        {
-                            Produto produto = _produtoRepositorio.AdicionarProdutoParaVendaPorPeso(ltvProdutos, codigo, peso);
-                            if (produto != null)
-                            {
-                                InstanciarVendaComComandaAtivaRepositorio();
-                                _vendaComComandaATivaRepositorio.Cadastrar(PupularVendaComComandaAtivaPeso(produto, peso));
-                                MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
-                                DesmarcarCheckBox();
-                                LimparTxt(new List<TextBox>() { txtCodigoDoProduto, txtPesoDoProduto });
-                                PosSalvamento();
-                                CarregarTxtQuantidadeComUm();
-                                timer1.Start();
-                                DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
-                            }
-                        }
-                        else
-                        {
-                            DesmarcarCheckBox();
-                            FocarNoTxt(txtCodigoDoProduto);
-                            txtCodigoDoProduto.Text = codigo;
-                            SendKeys.SendWait("{Enter}");
-                            LimparTxt(new List<TextBox> { txtCodigoDoProduto });
-                        }
-
-                    }
-                    else
-                    {
-                        MyErro.MyCustomException("Digite o peso do item vendido.");
-                        FocarNoTxt(txtPesoDoProduto);
-                    }
-                }
-                else
-                {
-
-                    InstanciarProdutoRepositorio();
-                    InstanciarVendaComComandaAtivaRepositorio();
-                    Produto produto = _produtoRepositorio.AdicionarProdutoNoListViewSemComanda(ltv: ltvProdutos, codigo: codigo, quantidade: Convert.ToInt32(txtQuantidade.Text));
-                    if (produto != null)
-                    {
-                        _vendaComComandaATivaRepositorio.Cadastrar(new VendaComComandaAtiva()
-                        {
-                            IDComanda = Convert.ToInt32(txtIDdaComanda.Text),
-                            IDProduto = produto.ID,
-                            PrecoTotal = produto.PrecoVenda * Convert.ToInt32(txtQuantidade.Text),
-                            Quantidade = Convert.ToInt32(txtQuantidade.Text)
-                        });
-                        LimparTxt(new List<TextBox>() { txtCodigoDoProduto });
-
-                        DesmarcarCheckBox();
-                        LimparTxt(new List<TextBox>() { txtPesoDoProduto });
-                        MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
-                        PosSalvamento();
-                        CarregarTxtQuantidadeComUm();
-                        timer1.Start();
-                        DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
-                    }
-
-
-                }
-            }
-            catch (CustomException error)
-            {
-                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
-            }
-            catch (Exception error)
-            {
-                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
-            }
-
-        }
-
         private VendaComComandaAtiva PupularVendaComComandaAtivaPeso(Produto produto, decimal peso)
         {
 
 
             try
             {
-                int pesoTemp = Convert.ToInt32(peso);
                 VendaComComandaAtiva venda = new VendaComComandaAtiva();
                 venda.IDComanda = Convert.ToInt32(txtIDdaComanda.Text);
                 venda.IDProduto = produto.ID;
                 venda.PrecoTotal = (produto.PrecoVenda / 1000) * peso;
-                venda.Quantidade = -pesoTemp;
+                venda.Quantidade = 0;
                 return venda;
 
             }
@@ -558,23 +461,21 @@ namespace View.UI.ViewTerminal
                     Produto produto = _produtoRepositorio.GetProdutoPorCodigo(MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 1));
                     string recebido = (MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 2));
                     int quantidade = 0;
-                    if (recebido.Contains("Kg"))
-                    {
-                        string recebidoTemp = MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 2).Replace(" Kg","");
-                        quantidade = -Convert.ToInt32(recebidoTemp.Replace(",",""));
-                    }
-                    else
+                    if (!recebido.Contains("Peso"))
                     {
                         quantidade = Convert.ToInt32(MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 2));
                     }
+
                     if (OpenMdiForm.OpenForWithShowDialog(new frmCadastrarProduto(produto, new DeletarDaComandaAtiva() { Quantidade = quantidade, ComandaID = Convert.ToInt32(txtIDdaComanda.Text), ProdutoID = produto.ID }, EnumTipoCadastro.Comanda)) == DialogResult.Yes)
                     {
+
+
                         LimparListView();
                         CarregarComanda();
                         FocarNoTxt(txtCodigoDoProduto);
                         CarregarTxtQuantidadeComUm();
                     }
-                 
+
 
 
 
@@ -633,38 +534,6 @@ namespace View.UI.ViewTerminal
             try
             {
                 CarregarFormComanda();
-            }
-            catch (CustomException error)
-            {
-                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
-            }
-            catch (Exception error)
-            {
-                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
-            }
-
-        }
-
-        private void txtCodigoDoProduto_TextChanged(object sender, EventArgs e)
-        {
-            if (txtPesoDoProduto.Text.Trim().Length > 0)
-            {
-                if (txtPesoDoProduto.Text.Trim().EndsWith(","))
-                {
-                    txtPesoDoProduto.Text = txtPesoDoProduto.Text.Remove(txtPesoDoProduto.Text.Length - 1, 1);
-                }
-            }
-        }
-
-        private void txtCodigoDoProduto_DoubleClick(object sender, EventArgs e)
-        {
-
-            try
-            {
-                if (OpenMdiForm.OpenForWithShowDialog(new frmPesquisarProduto(EnumTipoPesquisa.ProdutoTerminal)) == DialogResult.Yes)
-                {
-                    CarregarProduto(codigo: Produto.StaticCodigo);
-                }
             }
             catch (CustomException error)
             {

@@ -4,6 +4,7 @@ using Model.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using UI.View.Enum;
 
 namespace UI.View.UI.ViewComanda
 {

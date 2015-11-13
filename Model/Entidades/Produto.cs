@@ -201,6 +201,5 @@ namespace Model.Entidades
             }
         }
 
-        public static string  StaticCodigo { get; set; }
     }
 }
