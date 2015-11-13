@@ -339,7 +339,7 @@ namespace Controller.Repositorio
                     ltv.Columns.Add("Quantidade").Width = 76;
                     ltv.Columns.Add("Total").Width = 70;
                     ltv.Columns.Add("LucroTotal").Width = 50;
-
+                     
                 }
 
                 foreach (var item in _venda)
