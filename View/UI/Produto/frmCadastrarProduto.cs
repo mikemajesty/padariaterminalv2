@@ -27,18 +27,11 @@ namespace UI.View.UI.ViewProduto
             InitializeComponent();
         }
         private void InstanciarProdutoRepositorio()
-        {
-            _produtoRepositorio = new ProdutoRepositorio();
-        }
+                     => _produtoRepositorio = new ProdutoRepositorio();
         private void InstanciarVendaComComandaAtivaRepositorio()
-        {
-            _vendaComComandaAtivaRepositorio = new VendaComComandaAtivaRepositorio();
-        }
+                     => _vendaComComandaAtivaRepositorio = new VendaComComandaAtivaRepositorio();
         private void InstanciarTipoCadastroRepositorio()
-        {
-            _tipoCadastroRepositorio = new TipoCadastroRepositorio();
-        }
-
+                     => _tipoCadastroRepositorio = new TipoCadastroRepositorio();
         private void frmCadastrarProduto_Load(object sender, EventArgs e)
         {
 
@@ -68,14 +61,14 @@ namespace UI.View.UI.ViewProduto
                     MudarTextoDoBotao("Alterar");
                     DesabilitarGroupBox(gpbTipoCadastro);
                     DesabilitarGroupBox(gpbProduto);
-                    DesabilitarGroupBox( gpbDadosUnidade);
-                    DesabilitarTextBox(new List<TextBox>{txtQtdMaxima,txtQtdMinima});
+                    DesabilitarGroupBox(gpbDadosUnidade);
+                    DesabilitarTextBox(new List<TextBox> { txtQtdMaxima, txtQtdMinima });
                     MudarCorDoBotao(Color.LightGreen);
                     DesabilitarCheckBox();
                     FocarNoTxt(txtEstoque);
                 }
-              
-              
+
+
             }
             catch (CustomException erro)
             {
@@ -88,19 +81,11 @@ namespace UI.View.UI.ViewProduto
 
         }
 
-        private void FocarNoBotao(Button btn)
-        {
-            this.FocoNoBotao(btn);
-        }
+        private void FocarNoBotao(Button btn) => this.FocoNoBotao(btn);
+
 
         private void DesabilitarTextBox(List<TextBox> txtList)
-        {
-            foreach (var txt in txtList)
-            {
-                txt.Enabled = false;
-            }
-        }
-
+                     => txtList.ForEach(c => c.Enabled = false);
         private void CarregarTipoDeCadastro()
         {
             try
@@ -144,14 +129,9 @@ namespace UI.View.UI.ViewProduto
         }
 
         private void InstanciarCategoriaRepositorio()
-        {
-            _categoriaRepositorio = new CategoriaRepositotio();
-        }
+                     => _categoriaRepositorio = new CategoriaRepositotio();
 
-        private void DesabilitarCheckBox()
-        {
-            ckbEstoque.Enabled = false;
-        }
+        private void DesabilitarCheckBox() => ckbEstoque.Enabled = false;
 
         private void DesabilitarGroupBox(GroupBox gpb)
         {
@@ -168,9 +148,9 @@ namespace UI.View.UI.ViewProduto
         }
 
         private void DesabilitarGroupBoxDeTipoDeCadastro()
-        {
-            gpbTipoCadastro.Enabled = false;
-        }
+                     => gpbTipoCadastro.Enabled = false;
+
+
 
         private void DesabilitarCampos()
         {
@@ -184,26 +164,18 @@ namespace UI.View.UI.ViewProduto
         }
 
         private void MudarTextoDoBotao(string text)
-        {
-            btnCadastrar.Text = text;
-        }
+                     => btnCadastrar.Text = text;
 
         private void MudarTextoDoForm(string text)
-        {
-            this.Text = text;
-        }
-
+                     => this.Text = text;
         private void MudarCorDoBotao(Color color)
-        {
-            btnCadastrar.BackColor = color;
-        }
-
+                     => btnCadastrar.BackColor = color;
         private void PopulaTxt()
         {
             try
             {
                 cbbTipoCadastro.Text = CarregarComboBoxDeAcordoComTipoDeCadastro();
-               
+
                 switch (cbbTipoCadastro.Text)
                 {
                     case "Unidade":
@@ -299,23 +271,16 @@ namespace UI.View.UI.ViewProduto
         }
 
         private void EsconderGruopBox(GroupBox gpb)
-        {
-            gpb.Visible = false;
-        }
-
+                     => gpb.Visible = false;
         private void cbbTipoCadastro_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-
             try
             {
-
                 FocarNoTxt(txt: txtCodigo);
-               
                 switch (cbbTipoCadastro.Text)
                 {
                     case "Unidade":
-                      
+
                         MudarTamanhoDotxtDescricao(new Size(248, 106));
                         AparecerGruopBox(gpbEstoque);
                         AparecerGruopBox(gpbDadosUnidade);
@@ -338,18 +303,12 @@ namespace UI.View.UI.ViewProduto
                     case "Peso":
                         MudarTamanhoDoform(new Size(701, 485));
                         EsconderGruopBox(gpbEstoque);
-                        //MudarTamanhoDotxtDescricao(new Size(558, 106));
                         MudarPosicaoDoBotao(new Point(12, 385));
-                        //DesabilitarGroupBoxDadosDoPeso(gpbDadosPeso);
-                       // LimparTodosOsTxt();
                         DeixarTxtComoObrigatorio(ListaTxtPeso());
                         DefinirMaxLenghtDoTxtEstoque(tamanho: 3);
                         EsconderCheckBox();
                         MudarPosicaoDoGroupBoxTipoCadastro(new Point(174, 4));
-                        //LimparCheckBox();
                         break;
-
-
                 }
 
             }
@@ -361,23 +320,16 @@ namespace UI.View.UI.ViewProduto
             {
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
-
         }
-        private TextBox[] ListaTxtPeso()
-        {
-            TextBox[] txtListPeso = { txtCodigo, txtNome, txtDescricao/*, txtPorcentagem */};
-            return txtListPeso;
-        }
+        private TextBox[] ListaTxtPeso()      
+                         => new TextBox[] { txtCodigo,
+                                            txtNome,
+                                            txtDescricao };
+      
         private void EsconderCheckBox()
-        {
-            ckbEstoque.Visible = false;
-        }
-
+                     => ckbEstoque.Visible = false;
         private void DefinirMaxLenghtDoTxtEstoque(int tamanho)
-        {
-            txtEstoque.MaxLength = tamanho;
-        }
-
+                     =>txtEstoque.MaxLength = tamanho;
         private void ComboBoxCheckado()
         {
             if (ckbEstoque.Checked == false)
@@ -387,88 +339,45 @@ namespace UI.View.UI.ViewProduto
         }
 
         private void LimparCheckBox()
-        {
-            ckbEstoque.Checked = false;
-        }
-
+                     => ckbEstoque.Checked = false;
         private void MostrarCheck()
-        {
-            ckbEstoque.Visible = true;
-        }
-
+                     => ckbEstoque.Visible = true;
         private void MudarPosicaoDoGroupBoxTipoCadastro(Point point)
-        {
-            gpbTipoCadastro.Location = point;
-        }
-
+                     => gpbTipoCadastro.Location = point;
         private void DeixarTxtComoObrigatorio(TextBox[] txtList)
-        {
-            try
-            {
-
-                foreach (TextBox txt in txtList)
-                {
-                    txt.BackColor = Color.Yellow;
-                }
-
-            }
-            catch (CustomException erro)
-            {
-                DialogMessage.MessageFullComButtonOkIconeDeInformacao(erro.Message, "Aviso");
-            }
-            catch (Exception erro)
-            {
-                DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
-            }
-        }
+                     => Array.ForEach(txtList, c => c.BackColor = Color.Yellow);
         private TextBox[] ListaTxtUnidade()
-        {
-            TextBox[] txtListUnidade = { txtCodigo, txtNome/*, txtPrecoCompra*/, txtPrecoVenda, txtQtdMaxima, txtQtdMinima, txtEstoque };
-            return txtListUnidade;
-        }
+                => new TextBox[] { txtCodigo,
+                                   txtNome,
+                                   txtPrecoVenda,
+                                   txtQtdMaxima,
+                                   txtQtdMinima,
+                                   txtEstoque };
         private void LimparTodosOsTxt()
-        {
-            TextBox[] textBoxList = TodosOsTxt();
-            foreach (TextBox txt in textBoxList)
-            {
-                txt.Text = string.Empty;
-            }
-        }
+                     => Array.ForEach(TodosOsTxt(), c => c.Text = string.Empty);
         private TextBox[] TodosOsTxt()
-        {
-            TextBox[] textBoxList = { txtCodigo, txtDescricao, txtEstoque, txtNome/*, txtPorcentagem/*, txtPrecoCompra*/, txtPrecoVenda, txtQtdMaxima, txtQtdMinima };
-            return textBoxList;
-        }
+                          => new TextBox[] { txtCodigo,
+                                             txtDescricao,
+                                             txtEstoque,
+                                             txtNome,
+                                             txtPrecoVenda,
+                                             txtQtdMaxima,
+                                             txtQtdMinima };
+           
         private void AparecerGruopBox(GroupBox gpb)
-        {
-            gpb.Visible = true;
-        }
-
+                     => gpb.Visible = true;
         private void MudarTamanhoDotxtDescricao(Size size)
-        {
-            txtDescricao.Size = size;
-        }
-
+                     => txtDescricao.Size = size;
         private void MudarPosicaoDoBotao(Point point)
-        {
-            btnCadastrar.Location = point;
-        }
-
+                     => btnCadastrar.Location = point;
         private void MudarTamanhoDoform(Size size)
-        {
-            this.Size = size;
-        }
-
+                     => this.Size = size;
         private void FocarNoTxt(TextBox txt)
-        {
-            this.FocoNoTxt(txt);
-        }
-
+                     => this.FocoNoTxt(txt);
         private void ckbEstoque_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-
                 if (ckbEstoque.Checked)
                 {
                     AparecerGruopBox(gpbEstoque);
@@ -516,42 +425,46 @@ namespace UI.View.UI.ViewProduto
                 }
                 else if (_enumTipoCadastro == EnumTipoCadastro.Estoque)
                 {
-                    InstanciarProdutoRepositorio();
-                    if (_produtoRepositorio.GetProdutoPorID(_produto.ID).Quantidade >  Convert.ToInt32(txtEstoque.Text))
+                    if (ckbEstoque.Checked == true)
                     {
-                          DialogMessage.MessageFullComButtonOkIconeDeInformacao("Estoque só pode ser retirado pelo Administrador","Aviso");
-                          txtEstoque.Text = _produto.Quantidade.ToString();
-                          FocarNoTxt(txtEstoque);
+                        InstanciarProdutoRepositorio();
+                        if (_produtoRepositorio.GetProdutoPorID(_produto.ID).Quantidade > Convert.ToInt32(txtEstoque.Text.Trim() == "" ? "0" : txtEstoque.Text.Trim()))
+                        {
+                            DialogMessage.MessageFullComButtonOkIconeDeInformacao("Estoque só pode ser retirado pelo Administrador", "Aviso");
+                            txtEstoque.Text = _produto.Quantidade.ToString();
+                            FocarNoTxt(txtEstoque);
+                        }
+                        else
+                        {
+                            int operacao = _produtoRepositorio.Alterar(new Produto()
+                            {
+                                Categoria = _produto.Categoria,
+                                Codigo = _produto.Codigo,
+                                Descricao = _produto.Descricao,
+                                GerenciarEstoque = _produto.GerenciarEstoque,
+                                ID = _produto.ID,
+                                Nome = _produto.Nome,
+                                Porcentagem = _produto.Porcentagem,
+                                PrecoCompra = _produto.PrecoCompra,
+                                PrecoVenda = _produto.PrecoVenda,
+                                PrecoVendaPeso = _produto.PrecoVendaPeso,
+                                Quantidade = Convert.ToInt32(txtEstoque.Text),
+                                QuantidadeMaxima = _produto.QuantidadeMinima,
+                                QuantidadeMinima = _produto.QuantidadeMinima,
+                                TipoCadastro = _produto.TipoCadastro
+                            });
+                            if (operacao > 0)
+                            {
+                                DialogMessage.MessageFullComButtonOkIconeDeInformacao("Estoque Alterado com Sucesso", "Aviso");
+                                this.DialogResult = DialogResult.Yes;
+                            }
+                        }
                     }
                     else
                     {
-                        int operacao = _produtoRepositorio.Alterar(new Produto()
-                        {
-                            Categoria = _produto.Categoria,
-                            Codigo = _produto.Codigo,
-                            Descricao = _produto.Descricao,
-                            GerenciarEstoque = _produto.GerenciarEstoque,
-                            ID = _produto.ID,
-                            Nome = _produto.Nome,
-                            Porcentagem = _produto.Porcentagem,
-                            PrecoCompra = _produto.PrecoCompra,
-                            PrecoVenda = _produto.PrecoVenda,
-                            PrecoVendaPeso = _produto.PrecoVendaPeso,
-                            Quantidade = Convert.ToInt32(txtEstoque.Text),
-                            QuantidadeMaxima = _produto.QuantidadeMinima,
-                            QuantidadeMinima = _produto.QuantidadeMinima,
-                            TipoCadastro = _produto.TipoCadastro
-                        });
-                        if (operacao > 0)
-                        {
-                            DialogMessage.MessageFullComButtonOkIconeDeInformacao("Estoque Alterado com Sucesso", "Aviso");
-                            this.DialogResult = DialogResult.Yes;
-                        }
+                        MyErro.MyCustomException("Esse produto não é gerenciado pelo estoque.");
                     }
-                  
                 }
-                
-
             }
             catch (CustomException erro)
             {
@@ -561,14 +474,9 @@ namespace UI.View.UI.ViewProduto
             {
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
-
         }
-
         private void txtEstoque_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            ValidatorField.Integer(e);
-        }
-
+                     => ValidatorField.Integer(e);
 
     }
 }

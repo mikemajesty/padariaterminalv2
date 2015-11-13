@@ -193,7 +193,7 @@ namespace Controller.Repositorio
                 if (produto != null)
                 {
                     IQueryable<dynamic> _venda = null;
-
+                    string pesoTemp = peso <= 9 ? "0,00" + peso + " Kg" : peso <= 99 ? "0,0" + peso + " Kg" : peso <= 999 ? "0," + peso + " Kg" : "" + peso + " Kg";
                     if (produto.TipoCadastro == IDTipoPeso)
                     {
                         _venda = (from prod in _banco.Produto
@@ -203,7 +203,7 @@ namespace Controller.Repositorio
                                       ,
                                       Codigo = prod.Codigo
                                       ,
-                                      Quantidade = "Peso"
+                                      Quantidade = pesoTemp
                                       ,
                                       Total = (prod.PrecoVenda / 1000) * peso
                                       ,
@@ -279,7 +279,7 @@ namespace Controller.Repositorio
                 {
                     int idTipoCadastro = _tipoCadastroRepositorio.GetIDPeloNome("Peso");
                     return _banco.Produto.Any(c => c.TipoCadastro == idTipoCadastro && c.Codigo == codigo);
-                }                
+                }
                 throw new CustomException("Esse produto não esta cadastrado.");
             }
             catch (CustomException error)
@@ -346,10 +346,21 @@ namespace Controller.Repositorio
                 {
                     listView = new ListViewItem(item.Nome);
                     listView.SubItems.Add(item.Codigo);
-                    object itemQtd = item.Quantidade;
-                    if (itemQtd.ToString().Contains("Peso"))
+                    if (item.Quantidade.ToString().Contains(","))
                     {
-                        listView.SubItems.Add("Peso");
+                        string pesoTemp = item.Quantidade.ToString().Trim().Replace(",", "");
+                        int peso = 0;
+                        if (pesoTemp.Trim().StartsWith("00"))
+                        {
+                            peso = Convert.ToInt32(pesoTemp.Replace(" Kg", ""));
+                        }
+                        else
+                        {
+                            peso = Convert.ToInt32(pesoTemp.Replace(" Kg", "0"));
+                        }
+
+                        pesoTemp = peso <= 9 ? "0,00" + peso + " Kg" : peso <= 99 ? "0,0" + peso + " Kg" : peso <= 999 ? "0," + peso + " Kg" : peso <= 9999 ? peso.ToString().Insert(1, ",") + " Kg" : peso >= 10000 ? peso.ToString().Insert(2, ",") + " Kg" : "" + peso + " Kg";
+                        listView.SubItems.Add(pesoTemp);
                     }
                     else
                     {

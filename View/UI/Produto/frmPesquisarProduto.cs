@@ -49,19 +49,23 @@ namespace View.UI.ViewProduto
             try
             {
                 InstanciarProdutoRepositorio();
-                if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
+                switch (_enumTipoPesquisa)
                 {
-
-                    _produtoRepositorio.ListarProduto(dgv: dgvProdutos);
-                    AjustarTamanhoDoGrid();
+                    case EnumTipoPesquisa.Produto:
+                        _produtoRepositorio.ListarProduto(dgv: dgvProdutos);
+                        AjustarTamanhoDoGrid();
+                        break;
+                    case EnumTipoPesquisa.Estoque:
+                        _produtoRepositorio.ListarProdutoPorUnidade(dgv: dgvProdutos);
+                        AjustarTamanhoDoGrid();
+                        MudarTextoDoForm(texto: "Alterar Estoque");
+                        break;
+                    case EnumTipoPesquisa.ProdutoTerminal:
+                        _produtoRepositorio.ListarProduto(dgv: dgvProdutos);
+                        AjustarTamanhoDoGrid();
+                        break;
+                   
                 }
-                else if (_enumTipoPesquisa == EnumTipoPesquisa.Estoque)
-                {
-                    _produtoRepositorio.ListarProdutoPorUnidade(dgv: dgvProdutos);
-                    AjustarTamanhoDoGrid();
-                    MudarTextoDoForm(texto:"Alterar Estoque");
-                }
-
 
             }
             catch (CustomException erro)
@@ -89,7 +93,7 @@ namespace View.UI.ViewProduto
                     new TamanhoGrid() { Tamanho = -1, ColunaNome="ID"} ,
                     new TamanhoGrid() { Tamanho = 130, ColunaNome = "Código" },
                     new TamanhoGrid() { Tamanho = 220, ColunaNome = "Nome" },
-                    new TamanhoGrid() { Tamanho = 125, ColunaNome="Categoria" },              
+                    new TamanhoGrid() { Tamanho = 125, ColunaNome="Categoria" },
                     new TamanhoGrid() { Tamanho = 100, ColunaNome="Preço" }  ,
                     new TamanhoGrid() { Tamanho = 100, ColunaNome="Estoque" }});
 
@@ -103,7 +107,7 @@ namespace View.UI.ViewProduto
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
-       
+
         }
 
         private void InstanciarProdutoRepositorio()
@@ -190,7 +194,7 @@ namespace View.UI.ViewProduto
                                 {
                                     _produtoRepositorio.SelectProdutoPeloCodigoEstoque(dgv: dgvProdutos, codigo: txtPesquisar.Text);
                                 }
-                                
+
                             }
 
                             break;
@@ -203,7 +207,7 @@ namespace View.UI.ViewProduto
                             {
                                 _produtoRepositorio.SelectProdutoPeloCategoriaEstoque(dgv: dgvProdutos, categoria: txtPesquisar.Text);
                             }
-                           
+
                             break;
                     }
                 }
@@ -387,10 +391,15 @@ namespace View.UI.ViewProduto
                     {
                         CarregarGrid();
                     }
-                   
-                    
                 }
-
+                else if (_enumTipoPesquisa == EnumTipoPesquisa.ProdutoTerminal && e.RowIndex >= 0)
+                {
+                    Produto.StaticCodigo = dgvProdutos.CurrentRow.Cells["Código"].Value.ToString();
+                    if (Produto.StaticCodigo.Length > 0)
+                    {
+                        this.DialogResult = DialogResult.Yes;
+                    }
+                }
 
             }
             catch (CustomException erro)
