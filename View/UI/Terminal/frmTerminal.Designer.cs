@@ -211,7 +211,7 @@
             // 
             this.txtPesoDoProduto.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPesoDoProduto.Location = new System.Drawing.Point(6, 34);
-            this.txtPesoDoProduto.MaxLength = 7;
+            this.txtPesoDoProduto.MaxLength = 6;
             this.txtPesoDoProduto.Name = "txtPesoDoProduto";
             this.txtPesoDoProduto.Size = new System.Drawing.Size(201, 38);
             this.txtPesoDoProduto.TabIndex = 3;

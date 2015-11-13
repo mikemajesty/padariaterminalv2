@@ -29,7 +29,7 @@ namespace View.UI.ViewProduto
             {
 
                 CarregarGrid();
-
+                FocarNoRdb(rdb: rdbNome);
 
             }
             catch (CustomException erro)
@@ -43,6 +43,8 @@ namespace View.UI.ViewProduto
 
         }
 
+        private void FocarNoRdb(RadioButton rdb)
+                     => this.ActiveControl = rdb;
         private void CarregarGrid()
         {
 
@@ -64,7 +66,7 @@ namespace View.UI.ViewProduto
                         _produtoRepositorio.ListarProduto(dgv: dgvProdutos);
                         AjustarTamanhoDoGrid();
                         break;
-                   
+
                 }
 
             }
@@ -77,7 +79,23 @@ namespace View.UI.ViewProduto
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.F1:
+                    FocarNoRdb(rdbNome);
+                    break;
+                case Keys.F2:
+                    FocarNoRdb(rdbCodigo);
+                    break;
+                case Keys.F3:
+                    FocarNoRdb(rdbCategoria);
+                    break;
 
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
         private void MudarTextoDoForm(string texto)
         {
             this.Text = texto;
@@ -136,15 +154,10 @@ namespace View.UI.ViewProduto
         }
 
         private void MudarTextoDoGroupBox(string texto)
-        {
-            gpbPesquisar.Text = texto;
-        }
+                     => gpbPesquisar.Text = texto;
 
         private void LimparTxt(TextBox txt)
-        {
-            txt.Text = string.Empty;
-        }
-
+                     => txt.Text = string.Empty;
         private void txtPesquisar_TextChanged(object sender, EventArgs e)
         {
             try
@@ -169,12 +182,15 @@ namespace View.UI.ViewProduto
                 InstanciarProdutoRepositorio();
                 if (_produtoRepositorio.GetQuantidade() > 0)
                 {
-                    int tamanho = txtPesquisar.Text.Length;
                     InstanciarProdutoRepositorio();
                     switch (SelecionarTextoDoRadioButtonSelecionado())
                     {
-                        case "Nome":
+                        case "Nome [F1]":
                             if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
+                            {
+                                _produtoRepositorio.SelectProdutoPeloNomeTodos(dgv: dgvProdutos, nome: txtPesquisar.Text);
+                            }
+                            else if (_enumTipoPesquisa == EnumTipoPesquisa.ProdutoTerminal)
                             {
                                 _produtoRepositorio.SelectProdutoPeloNomeTodos(dgv: dgvProdutos, nome: txtPesquisar.Text);
                             }
@@ -183,23 +199,27 @@ namespace View.UI.ViewProduto
                                 _produtoRepositorio.SelectProdutoPeloNomeEstoque(dgv: dgvProdutos, nome: txtPesquisar.Text);
                             }
                             break;
-                        case "Código":
-                            if (tamanho == 0)
-                            {
+                        case "Código [F2]":
+                           
                                 if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
+                                {
+                                    _produtoRepositorio.SelectProdutoPeloCodigoTodos(dgv: dgvProdutos, codigo: txtPesquisar.Text);
+                                }
+                                else if (_enumTipoPesquisa == EnumTipoPesquisa.ProdutoTerminal)
                                 {
                                     _produtoRepositorio.SelectProdutoPeloCodigoTodos(dgv: dgvProdutos, codigo: txtPesquisar.Text);
                                 }
                                 else
                                 {
                                     _produtoRepositorio.SelectProdutoPeloCodigoEstoque(dgv: dgvProdutos, codigo: txtPesquisar.Text);
-                                }
-
-                            }
-
+                                }                                
                             break;
-                        case "Categoria":
+                        case "Categoria [F3]":
                             if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
+                            {
+                                _produtoRepositorio.SelectProdutoPeloCategoriaTodos(dgv: dgvProdutos, categoria: txtPesquisar.Text);
+                            }
+                            else if (_enumTipoPesquisa == EnumTipoPesquisa.ProdutoTerminal)
                             {
                                 _produtoRepositorio.SelectProdutoPeloCategoriaTodos(dgv: dgvProdutos, categoria: txtPesquisar.Text);
                             }
@@ -207,7 +227,6 @@ namespace View.UI.ViewProduto
                             {
                                 _produtoRepositorio.SelectProdutoPeloCategoriaEstoque(dgv: dgvProdutos, categoria: txtPesquisar.Text);
                             }
-
                             break;
                     }
                 }

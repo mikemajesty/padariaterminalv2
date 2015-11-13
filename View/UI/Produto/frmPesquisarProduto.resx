@@ -121,7 +121,7 @@
   <data name="rdbCategoria.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAF7SURBVDhPtVM7SwNBEN7CR6HgqxEUbFId3O3GJd7tZrNj
+        YQUAAAAJcEhZcwAADr8AAA6/ATgFUyQAAAF7SURBVDhPtVM7SwNBEN7CR6HgqxEUbFId3O3GJd7tZrNj
         0ED+kgiihRZqYeNvUFC00RCtRFu1sdFCBBFEUAsLIWCIM5ctPLzzKj/4WOb13e7MHCN4UTQaKDgVGtrI
         Tg7bIoITDjAcFxOEsutxMIQPDJ4H2p6lUajKha/hk3K5smuunDGu7R4Wv/szMOlcmRDGeCjQwpod50KB
         yO5zBQ1n5gIFroWCXWd2BYS2RwDQg+cSj6IJFFzmGrYSxGt7nteH52WqgJTzQyK0t7IMRmhzI3TlKUEF
@@ -134,7 +134,7 @@
   <data name="rdbCodigo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAgCSURBVGhD7ZjZU1VXFsYtLa1oK7YGDIioEOeITILIrMzB
+        YQUAAAAJcEhZcwAADr8AAA6/ATgFUyQAAAgCSURBVGhD7ZjZU1VXFsYtLa1oK7YGDIioEOeITILIrMzB
         2BqNGhNj4mwUbYeIgGIEHFAEVGQw3ZI8JGJURhVwQBTQLu3WTHZ1OzM6D/0XrF7fdzm3eEnX4aXLh7ur
         frW+zdpn7bXW2Zd7zu1mG7ZhG7ZhG7ZhG2/auH79evatW7fkTQI5daT3v8eNGzc87ty5K69f/+eNAjkh
         t440f39cu3YttLW1TV69ek0aGq7Q3rz5kzQ0WvTt23ekUXXjlatqr3JurDfWIgb+DqBxrTHntR3zzj5o
@@ -174,7 +174,7 @@
   <data name="rdbNome.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAC+SURBVDhPYyAH3F+/POFRR9P7YxGB86FCxIM9e/Yk3Lhx
+        YQUAAAAJcEhZcwAADr8AAA6/ATgFUyQAAAC+SURBVDhPYyAH3F+/POFRR9P7YxGB86FCxIM9e/Yk3Lhx
         4/+FSb3/97o5vocKEwfW71+fcO3atf/nz575X19f9397ekoCVIowyDmek9B5qfP/9tNb/9fX1f2fPmUS
         aZqbLzb/TziU8N98kvn/+v4a8jQbTjL8L98uP6oZHxg4zdf3pyssPlf3nizNIPDyXN36HVvS/ru3G78n
         WfP+9TUBl7cW/p9cbDY/P15fACpMPFBVUVkf7a3tAOWSCBgYAHhYnxLEzMwhAAAAAElFTkSuQmCC

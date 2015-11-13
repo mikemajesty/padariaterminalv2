@@ -68,7 +68,7 @@
             this.rdbCategoria.Size = new System.Drawing.Size(220, 53);
             this.rdbCategoria.TabIndex = 0;
             this.rdbCategoria.TabStop = true;
-            this.rdbCategoria.Text = "Categoria";
+            this.rdbCategoria.Text = "Categoria [F3]";
             this.rdbCategoria.UseVisualStyleBackColor = true;
             this.rdbCategoria.CheckedChanged += new System.EventHandler(this.rdbCategoria_CheckedChanged);
             // 
@@ -83,7 +83,7 @@
             this.rdbCodigo.Size = new System.Drawing.Size(220, 53);
             this.rdbCodigo.TabIndex = 0;
             this.rdbCodigo.TabStop = true;
-            this.rdbCodigo.Text = "Código";
+            this.rdbCodigo.Text = "Código [F2]";
             this.rdbCodigo.UseVisualStyleBackColor = true;
             this.rdbCodigo.CheckedChanged += new System.EventHandler(this.rdbCodigo_CheckedChanged);
             // 
@@ -98,7 +98,7 @@
             this.rdbNome.Size = new System.Drawing.Size(220, 53);
             this.rdbNome.TabIndex = 0;
             this.rdbNome.TabStop = true;
-            this.rdbNome.Text = "Nome";
+            this.rdbNome.Text = "Nome [F1]";
             this.rdbNome.UseVisualStyleBackColor = true;
             this.rdbNome.CheckedChanged += new System.EventHandler(this.rdbNome_CheckedChanged);
             // 
@@ -126,7 +126,7 @@
             this.dgvProdutos.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
@@ -136,7 +136,7 @@
             this.dgvProdutos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Yellow;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;

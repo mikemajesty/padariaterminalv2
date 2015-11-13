@@ -4,6 +4,7 @@ using Model.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using UI.View;
 using UI.View.Enum;
 using UI.View.UI.ViewComanda;
 using UI.View.UI.ViewProduto;
@@ -17,6 +18,8 @@ namespace View.UI.ViewTerminal
         private VendaComComandaAtivaRepositorio _vendaComComandaATivaRepositorio;
         private ComandaRepositorio _comandaRepositorio;
         private ProdutoRepositorio _produtoRepositorio;
+        private frmMensagemDeEspera frmMensagem;
+        private Espere espere;
         private const bool Existe = true;
         public frmTerminal()
         {
@@ -172,7 +175,6 @@ namespace View.UI.ViewTerminal
 
         private void CarregarFormComanda()
         {
-
             try
             {
 
@@ -180,6 +182,8 @@ namespace View.UI.ViewTerminal
                 {
                     if (OpenMdiForm.OpenForWithShowDialog(new frmPesquisarComanda()) == DialogResult.Yes)
                     {
+                        espere = new Espere();
+                        espere.Start(MostrarMensagem);
                         if (Comanda.StaticID > 0)
                         {
                             txtIDdaComanda.Text = Comanda.StaticID.ToString();
@@ -196,14 +200,14 @@ namespace View.UI.ViewTerminal
                                     CarregarTxtQuantidadeComUm();
                                 }
                             }
-                            SendKeys.SendWait("{ENTER}");
                         }
-
+                    
                     }
                 }
                 else
                 {
-
+                    espere = new Espere();
+                    espere.Start(MostrarMensagem);
                     InstanciarComandaRepositorio();
                     InstanciarVendaComComandaAtivaRepositorio();
                     if (txtIDdaComanda.Text.Length > 0)
@@ -217,7 +221,7 @@ namespace View.UI.ViewTerminal
                             CarregarTxtQuantidadeComUm();
                         }
                     }
-                    SendKeys.SendWait("{ENTER}");
+                
                 }
             }
             catch (CustomException error)
@@ -228,7 +232,28 @@ namespace View.UI.ViewTerminal
             {
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
+            finally
+            {
+                
+                if (espere != null)
+                {
+                    espere.CancelarTask();
+                    if (espere.Cancel.IsCancellationRequested)
+                    {
+                        if (frmMensagem != null)
+                        {
+                            frmMensagem.Close();
+                        }
+                    }
+                }
+               
+            }
+        }
 
+        private void MostrarMensagem()
+        {
+            frmMensagem = new frmMensagemDeEspera();
+            frmMensagem.ShowDialog();
         }
 
         private void CarregarComanda()
@@ -300,20 +325,12 @@ namespace View.UI.ViewTerminal
         }
         private void txtValorDoProdutoPorpeso_KeyPress(object sender, KeyPressEventArgs e)
         {
-           
-            if (txtPesoDoProduto.Text.Trim().Length == 0)
+            ValidatorField.Peso(e: e, sender: sender);
+            ValidatorField.Money(e);
+            if (e.KeyChar == (char)Keys.Enter)
             {
                 FocarNoTxt(txtCodigoDoProduto);
             }
-            else
-            {
-                if (gpbQuantidadeDoProduto.Visible == true)
-                {
-                    FocarNoTxt(txtQuantidade);
-                }
-
-            }
-            ValidatorField.Peso(e: e, sender: sender);
         }
 
         private void txtQuantidade_KeyPress(object sender, KeyPressEventArgs e)
@@ -371,7 +388,7 @@ namespace View.UI.ViewTerminal
                 if (ckbPorPeso.Checked)
                 {
                     decimal peso = 0;
-                    string pesoDigitado = txtPesoDoProduto.Text.Trim();                 
+                    string pesoDigitado = txtPesoDoProduto.Text.Trim();
                     peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(pesoDigitado.Replace(",", ""));
                     if (peso > 0)
                     {
@@ -560,8 +577,8 @@ namespace View.UI.ViewTerminal
                     int quantidade = 0;
                     if (recebido.Contains("Kg"))
                     {
-                        string recebidoTemp = MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 2).Replace(" Kg","");
-                        quantidade = -Convert.ToInt32(recebidoTemp.Replace(",",""));
+                        string recebidoTemp = MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 2).Replace(" Kg", "");
+                        quantidade = -Convert.ToInt32(recebidoTemp.Replace(",", ""));
                     }
                     else
                     {
@@ -574,7 +591,7 @@ namespace View.UI.ViewTerminal
                         FocarNoTxt(txtCodigoDoProduto);
                         CarregarTxtQuantidadeComUm();
                     }
-                 
+
 
 
 

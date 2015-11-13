@@ -59,6 +59,12 @@
     <Compile Include="Enum\EnumComanda.cs" />
     <Compile Include="Enum\EnumTipoCadastro.cs" />
     <Compile Include="Enum\EnumTipoPesquisa.cs" />
+    <Compile Include="frmMensagemDeEspera.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMensagemDeEspera.Designer.cs">
+      <DependentUpon>frmMensagemDeEspera.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Comanda\frmPesquisarComanda.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +97,9 @@
     <Compile Include="UI\Terminal\frmTerminal.Designer.cs">
       <DependentUpon>frmTerminal.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="frmMensagemDeEspera.resx">
+      <DependentUpon>frmMensagemDeEspera.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Comanda\frmPesquisarComanda.resx">
       <DependentUpon>frmPesquisarComanda.cs</DependentUpon>
     </EmbeddedResource>
@@ -134,6 +143,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Source\Imagem\Global\19-0.gif" />
     <Content Include="Source\Imagem\Global\breads.ico" />
     <Content Include="Source\Imagem\Menu\basket_full.ico" />
     <Content Include="Source\Imagem\Menu\bkgTerminal.jpg" />
