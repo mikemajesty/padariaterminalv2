@@ -12,9 +12,7 @@ namespace Controller.Repositorio
     {
         private _DbContext _banco;
         public void InstanciarBanco()
-        {
-            _banco = new _DbContext();
-        }
+                    => _banco = new _DbContext();
         public string GetNomePeloID(int TipoCadastroID)
         {
             try

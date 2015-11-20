@@ -65,10 +65,8 @@ namespace View.UI.ViewTerminal
         {
             switch (keyData)
             {
-
-
                 case Keys.F1:
-                    FocarNoTxt(txtIDdaComanda);
+                    FocarNoTxt(txtCodigoDaComanda);
                     break;
                 case Keys.F2:
                     btnModificarComanda.PerformClick();
@@ -105,32 +103,6 @@ namespace View.UI.ViewTerminal
                     break;
                 case Keys.F12:
                     break;
-                case Keys.F13:
-                    break;
-                case Keys.F14:
-                    break;
-                case Keys.F15:
-                    break;
-                case Keys.F16:
-                    break;
-                case Keys.F17:
-                    break;
-                case Keys.F18:
-                    break;
-                case Keys.F19:
-                    break;
-                case Keys.F20:
-                    break;
-                case Keys.F21:
-                    break;
-                case Keys.F22:
-                    break;
-                case Keys.F23:
-                    break;
-                case Keys.F24:
-                    break;
-
-
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -161,13 +133,14 @@ namespace View.UI.ViewTerminal
             }
             catch (CustomException erro)
             {
-                FocarNoTxt(txtIDdaComanda);
-                LimparTxt(new List<TextBox>() { txtIDdaComanda });
+                FocarNoTxt(txtCodigoDaComanda);
+                LimparTxt(new List<TextBox>() { txtCodigoDaComanda });
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(erro.Message, "Aviso");
 
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -177,76 +150,101 @@ namespace View.UI.ViewTerminal
         {
             try
             {
-
-                if (txtIDdaComanda.Text.Trim().Length == 0)
+                espere = new Espere();
+                if (txtCodigoDaComanda.Text.Trim().Length == 0)
                 {
                     if (OpenMdiForm.OpenForWithShowDialog(new frmPesquisarComanda()) == DialogResult.Yes)
                     {
-                        espere = new Espere();
+
                         espere.Start(MostrarMensagem);
-                        if (Comanda.StaticID > 0)
+                        if (Comanda.CodigoStatic !=  "")
                         {
-                            txtIDdaComanda.Text = Comanda.StaticID.ToString();
+                            txtCodigoDaComanda.Text = Comanda.CodigoStatic.ToString();
                             InstanciarComandaRepositorio();
                             InstanciarVendaComComandaAtivaRepositorio();
-                            if (txtIDdaComanda.Text.Length > 0)
+                            if (txtCodigoDaComanda.Text.Length > 0)
                             {
-                                if (_comandaRepositorio.SeExiste(new Comanda() { ID = Convert.ToInt32(txtIDdaComanda.Text) }) == Existe)
+                                if (_comandaRepositorio.SeExiste(new Comanda() {  Codigo = txtCodigoDaComanda.Text }) == Existe)
                                 {
                                     MostrarPanel(pnlTudo);
-                                    DesabilitarTextBox(new List<TextBox>() { txtIDdaComanda });
+                                    DesabilitarTextBox(new List<TextBox>() { txtCodigoDaComanda });
                                     FocarNoTxt(txtQuantidade);
                                     CarregarComanda();
                                     CarregarTxtQuantidadeComUm();
                                 }
                             }
                         }
-                    
+
                     }
                 }
                 else
                 {
-                    espere = new Espere();
-                    espere.Start(MostrarMensagem);
+
                     InstanciarComandaRepositorio();
                     InstanciarVendaComComandaAtivaRepositorio();
-                    if (txtIDdaComanda.Text.Length > 0)
+                    if (txtCodigoDaComanda.Text.Length > 0)
                     {
-                        if (_comandaRepositorio.SeExiste(new Comanda() { ID = Convert.ToInt32(txtIDdaComanda.Text) }) == Existe)
+                        if (_comandaRepositorio.SeExiste(new Comanda() { Codigo = txtCodigoDaComanda.Text }) == Existe)
                         {
+                            espere.Start(MostrarMensagem);
                             MostrarPanel(pnlTudo);
-                            DesabilitarTextBox(new List<TextBox>() { txtIDdaComanda });
+                            DesabilitarTextBox(new List<TextBox>() { txtCodigoDaComanda });
                             FocarNoTxt(txtQuantidade);
                             CarregarComanda();
                             CarregarTxtQuantidadeComUm();
                         }
+                        else
+                        {
+                            MyErro.MyCustomException("Comanda com o Código: " + txtCodigoDaComanda.Text + " não esta cadastrado.");
+
+                        }
                     }
-                
+
                 }
             }
             catch (CustomException error)
             {
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+                FocarNoTxt(txtCodigoDaComanda);
+                LimparTxt(new List<TextBox> { txtCodigoDaComanda });
             }
             catch (Exception error)
             {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
             finally
             {
-                
-                if (espere != null)
+                CancelarAvisodeEspera();
+            };
+        }
+
+        private void CancelarAvisodeEspera()
+        {
+            if (espere != null)
+            {
+                espere.CancelarTask();
+                if (espere.Cancel.IsCancellationRequested)
                 {
-                    espere.CancelarTask();
-                    if (espere.Cancel.IsCancellationRequested)
+                    if (frmMensagem != null)
                     {
-                        if (frmMensagem != null)
-                        {
-                            frmMensagem.Close();
-                        }
+                        frmMensagem.Close();
                     }
                 }
-               
+                else
+                {
+                    if (frmMensagem != null)
+                    {
+                        frmMensagem.Close();
+                    }
+                }
+            }
+            else
+            {
+                if (frmMensagem != null)
+                {
+                    frmMensagem.Close();
+                }
             }
         }
 
@@ -261,8 +259,8 @@ namespace View.UI.ViewTerminal
 
             try
             {
-                int ID = Convert.ToInt32(txtIDdaComanda.Text);
-                _vendaComComandaATivaRepositorio.GetItensnaComandaPorID(ID, ltvProdutos);
+                string codigo = txtCodigoDaComanda.Text;
+                _vendaComComandaATivaRepositorio.GetItensnaComandaPorCodigo(codigo, ltvProdutos);
                 MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
 
             }
@@ -272,9 +270,9 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
-
         }
 
         private void DesabilitarTextBox(List<TextBox> list)
@@ -291,20 +289,12 @@ namespace View.UI.ViewTerminal
 
 
         private void FocarNoTxt(TextBox txtIDdaComanda)
-        {
-            this.FocoNoTxt(txtIDdaComanda);
-        }
-
+                     => this.FocoNoTxt(txtIDdaComanda);
         private void MostrarPanel(Panel pnl)
-        {
-            pnl.Visible = true;
-        }
+                     => pnl.Visible = true;
 
         private void ltvProdutos_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
-        {
-            MyListView.ColumnWidthChanging(e, ltvProdutos);
-        }
-
+                     => MyListView.ColumnWidthChanging(e, ltvProdutos);
 
         private void ckbPorPeso_CheckedChanged(object sender, EventArgs e)
         {
@@ -375,6 +365,7 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -385,57 +376,110 @@ namespace View.UI.ViewTerminal
 
             try
             {
+
                 if (ckbPorPeso.Checked)
                 {
-                    decimal peso = 0;
-                    string pesoDigitado = txtPesoDoProduto.Text.Trim();
-                    peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(pesoDigitado.Replace(",", ""));
-                    if (peso > 0)
-                    {
-                        InstanciarProdutoRepositorio();
-                        if (_produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == true)
-                        {
-                            Produto produto = _produtoRepositorio.AdicionarProdutoParaVendaPorPeso(ltvProdutos, codigo, peso);
-                            if (produto != null)
-                            {
-                                InstanciarVendaComComandaAtivaRepositorio();
-                                _vendaComComandaATivaRepositorio.Cadastrar(PupularVendaComComandaAtivaPeso(produto, peso));
-                                MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
-                                DesmarcarCheckBox();
-                                LimparTxt(new List<TextBox>() { txtCodigoDoProduto, txtPesoDoProduto });
-                                PosSalvamento();
-                                CarregarTxtQuantidadeComUm();
-                                timer1.Start();
-                                DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
-                            }
-                        }
-                        else
-                        {
-                            DesmarcarCheckBox();
-                            FocarNoTxt(txtCodigoDoProduto);
-                            txtCodigoDoProduto.Text = codigo;
-                            SendKeys.SendWait("{Enter}");
-                            LimparTxt(new List<TextBox> { txtCodigoDoProduto });
-                        }
+                    VenderPorPeso(codigo);
+                }
+                else
+                {
+                    VenderPorUnidade(codigo);
+                }
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+        }
 
+        private void VenderPorPeso(string codigo)
+        {
+
+            try
+            {
+                decimal peso = 0;
+                string pesoDigitado = txtPesoDoProduto.Text.Trim();
+                peso = pesoDigitado == "" ? 0 : Convert.ToDecimal(pesoDigitado.Replace(",", ""));
+                InstanciarProdutoRepositorio();
+                if (peso > 0)
+                {
+                    if (_produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == true)
+                    {
+                        Produto produto = _produtoRepositorio.AdicionarProdutoParaVendaPorPeso(ltvProdutos, codigo, peso);
+                        if (produto != null)
+                        {
+                            InstanciarVendaComComandaAtivaRepositorio();
+                            _vendaComComandaATivaRepositorio.Cadastrar(PupularVendaComComandaAtivaPeso(produto, peso));
+                            MyListView.GetValorNoListView(ltvProdutos, 3, lblTotalVenda);
+                            DesmarcarCheckBox();
+                            LimparTxt(new List<TextBox>() { txtCodigoDoProduto, txtPesoDoProduto });
+                            PosSalvamento();
+                            CarregarTxtQuantidadeComUm();
+                            timer1.Start();
+                            DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
+                        }
                     }
                     else
                     {
-                        MyErro.MyCustomException("Digite o peso do item vendido.");
-                        FocarNoTxt(txtPesoDoProduto);
+                        DesmarcarCheckBox();
+                        FocarNoTxt(txtCodigoDoProduto);
+                        txtCodigoDoProduto.Text = codigo;
+                        SendKeys.SendWait("{Enter}");
+                        LimparTxt(new List<TextBox> { txtCodigoDoProduto });
                     }
+
+                }
+                else if (peso > 0 && _produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == false
+                    || peso <= 0 && _produtoRepositorio.VerificarSeProdutoVendidoPorPeso(codigo: codigo) == false)
+                {
+                    VenderPorUnidade(codigo);
                 }
                 else
+                {
+                    MyErro.MyCustomException("Digite o peso do item vendido.");
+                    FocarNoTxt(txtPesoDoProduto);
+                }
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+        }
+
+        private void VenderPorUnidade(string codigo)
+        {
+
+            try
+            {
+
+                DialogResult dialogResult = DialogResult.OK;
+                if (Convert.ToInt32(txtQuantidade.Text) >= 10)
+                {
+                    dialogResult = DialogMessage.MessageFullQuestion("Deseja vender " + txtQuantidade.Text + " produtos?", "Aviso");
+                }
+                if (dialogResult == DialogResult.OK || dialogResult == DialogResult.Yes)
                 {
 
                     InstanciarProdutoRepositorio();
                     InstanciarVendaComComandaAtivaRepositorio();
+                    InstanciarComandaRepositorio();                    
                     Produto produto = _produtoRepositorio.AdicionarProdutoNoListViewSemComanda(ltv: ltvProdutos, codigo: codigo, quantidade: Convert.ToInt32(txtQuantidade.Text));
+
                     if (produto != null)
                     {
                         _vendaComComandaATivaRepositorio.Cadastrar(new VendaComComandaAtiva()
                         {
-                            IDComanda = Convert.ToInt32(txtIDdaComanda.Text),
+                            IDComanda =  _comandaRepositorio.GetIDPeloCodigo(txtCodigoDaComanda.Text).ID,
                             IDProduto = produto.ID,
                             PrecoTotal = produto.PrecoVenda * Convert.ToInt32(txtQuantidade.Text),
                             Quantidade = Convert.ToInt32(txtQuantidade.Text)
@@ -449,10 +493,10 @@ namespace View.UI.ViewTerminal
                         CarregarTxtQuantidadeComUm();
                         timer1.Start();
                         DialogMessage.MessageFullComButtonOkIconeDeInformacao("Produto inserido com sucesso.", "Aviso");
+
                     }
-
-
                 }
+
             }
             catch (CustomException error)
             {
@@ -460,6 +504,7 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception error)
             {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
 
@@ -472,8 +517,9 @@ namespace View.UI.ViewTerminal
             try
             {
                 int pesoTemp = Convert.ToInt32(peso);
+                InstanciarComandaRepositorio();
                 VendaComComandaAtiva venda = new VendaComComandaAtiva();
-                venda.IDComanda = Convert.ToInt32(txtIDdaComanda.Text);
+                venda.IDComanda = _comandaRepositorio.GetIDPeloCodigo(txtCodigoDaComanda.Text).ID;
                 venda.IDProduto = produto.ID;
                 venda.PrecoTotal = (produto.PrecoVenda / 1000) * peso;
                 venda.Quantidade = -pesoTemp;
@@ -488,30 +534,18 @@ namespace View.UI.ViewTerminal
             {
                 throw new Exception(erro.Message);
             }
-
-
-
         }
 
         private void DesmarcarCheckBox()
-        {
-            ckbPorPeso.Checked = false;
-        }
-
+                     => ckbPorPeso.Checked = false;
         private void InstanciarProdutoRepositorio()
-        {
-            _produtoRepositorio = new ProdutoRepositorio();
-        }
-
-
+                     => _produtoRepositorio = new ProdutoRepositorio();
         private void btnModificarComanda_Click(object sender, EventArgs e)
         {
 
             try
             {
-
                 PosSalvamento();
-
             }
             catch (CustomException erro)
             {
@@ -519,6 +553,7 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -530,12 +565,12 @@ namespace View.UI.ViewTerminal
         {
             try
             {
-                LimparTxt(new List<TextBox>() { txtIDdaComanda });
-                HabilitarTxt(txtIDdaComanda);
-                FocarNoTxt(txtIDdaComanda);
+                LimparTxt(new List<TextBox>() { txtCodigoDaComanda });
+                HabilitarTxt(txtCodigoDaComanda);
+                FocarNoTxt(txtCodigoDaComanda);
                 LimparListView();
                 EsconderPanel(pnlTudo);
-                LimparTxt(new List<TextBox>() { txtPesoDoProduto, txtIDdaComanda });
+                LimparTxt(new List<TextBox>() { txtPesoDoProduto, txtCodigoDaComanda });
                 CarregarComZeroLabelTotalVenda();
 
             }
@@ -545,24 +580,20 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
 
         private void CarregarComZeroLabelTotalVenda()
-        {
-            lblTotalVenda.Text = "00 R$";
-        }
+                     => lblTotalVenda.Text = "00 R$";
 
         private void LimparListView()
-        {
-            ltvProdutos.Clear();
-        }
+                     => ltvProdutos.Clear();
+
 
         private void HabilitarTxt(TextBox txt)
-        {
-            txt.Enabled = true;
-        }
+                     => txt.Enabled = true;
 
         private void ltvProdutos_DoubleClick(object sender, EventArgs e)
         {
@@ -584,7 +615,7 @@ namespace View.UI.ViewTerminal
                     {
                         quantidade = Convert.ToInt32(MyListView.RetornarValorPeloIndexDaColuna(ltvProdutos, 2));
                     }
-                    if (OpenMdiForm.OpenForWithShowDialog(new frmCadastrarProduto(produto, new DeletarDaComandaAtiva() { Quantidade = quantidade, ComandaID = Convert.ToInt32(txtIDdaComanda.Text), ProdutoID = produto.ID }, EnumTipoCadastro.Comanda)) == DialogResult.Yes)
+                    if (OpenMdiForm.OpenForWithShowDialog(new frmCadastrarProduto(produto, new DeletarDaComandaAtiva() { Quantidade = quantidade, ComandaID = Convert.ToInt32(txtCodigoDaComanda.Text), ProdutoID = produto.ID }, EnumTipoCadastro.Comanda)) == DialogResult.Yes)
                     {
                         LimparListView();
                         CarregarComanda();
@@ -602,6 +633,7 @@ namespace View.UI.ViewTerminal
                 }
                 catch (Exception erro)
                 {
+                    SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                     DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
                 }
 
@@ -618,10 +650,7 @@ namespace View.UI.ViewTerminal
         }
 
         private void CarregarTxtQuantidadeComUm()
-        {
-            txtQuantidade.Text = "1";
-        }
-
+                     => txtQuantidade.Text = "1";
         private void timer1_Tick(object sender, EventArgs e)
         {
 
@@ -639,6 +668,7 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -657,6 +687,7 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception error)
             {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
 
@@ -689,6 +720,7 @@ namespace View.UI.ViewTerminal
             }
             catch (Exception error)
             {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
 

@@ -39,6 +39,7 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -59,14 +60,13 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
 
         private void InstanciarTipoCadastroRepositorio()
-        {
-            _tipoCadastroRepositorio = new TipoCadastroRepositorio();
-        }
+                     => _tipoCadastroRepositorio = new TipoCadastroRepositorio();
         private void menuTerminal_Click(object sender, EventArgs e)
         {
 
@@ -82,6 +82,7 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -89,9 +90,7 @@ namespace UI.View
         }
 
         private void menuSair_Click(object sender, EventArgs e)
-        {
-            Sair();
-        }
+                     => Sair();
 
         private void Sair()
         {
@@ -116,6 +115,7 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -144,6 +144,7 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -165,6 +166,7 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -186,6 +188,7 @@ namespace UI.View
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 

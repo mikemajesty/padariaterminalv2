@@ -45,6 +45,6 @@ namespace Model.Entidades
             }
         }
 
-        public static int StaticID { get; set; }
+        public static string CodigoStatic { get; set; }
     }
 }

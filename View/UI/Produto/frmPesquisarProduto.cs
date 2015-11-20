@@ -3,7 +3,6 @@ using Mike.Utilities.Desktop;
 using Model.Entidades;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using UI.View.Enum;
 using UI.View.UI.ViewProduto;
@@ -38,6 +37,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -56,15 +56,18 @@ namespace View.UI.ViewProduto
                     case EnumTipoPesquisa.Produto:
                         _produtoRepositorio.ListarProduto(dgv: dgvProdutos);
                         AjustarTamanhoDoGrid();
+                        dgvProdutos.PadronizarGrid();
                         break;
                     case EnumTipoPesquisa.Estoque:
                         _produtoRepositorio.ListarProdutoPorUnidade(dgv: dgvProdutos);
                         AjustarTamanhoDoGrid();
                         MudarTextoDoForm(texto: "Alterar Estoque");
+                        dgvProdutos.PadronizarGrid();
                         break;
                     case EnumTipoPesquisa.ProdutoTerminal:
                         _produtoRepositorio.ListarProduto(dgv: dgvProdutos);
                         AjustarTamanhoDoGrid();
+                        dgvProdutos.PadronizarGrid();
                         break;
 
                 }
@@ -76,6 +79,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
@@ -92,15 +96,32 @@ namespace View.UI.ViewProduto
                 case Keys.F3:
                     FocarNoRdb(rdbCategoria);
                     break;
+                case Keys.Up:
+                    dgvProdutos.MoveToUp();
+                    break;
+                case Keys.Down:
+                    dgvProdutos.MoveToDown();
+                    break;
+                case Keys.Enter:
+                    if (dgvProdutos.Rows.Count > 0)
+                    {
+                        string codigo = (string)dgvProdutos.GetSelectRow(0, "Código");
+                        Produto.StaticCodigo = null;
+                        if (!string.IsNullOrEmpty((Produto.StaticCodigo = codigo)))
+                        {
+                            this.DialogResult = DialogResult.Yes;
+                        }
 
+                    }
+                    break;
+                case Keys.Escape:
+                    this.Close();
+                    break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
         private void MudarTextoDoForm(string texto)
-        {
-            this.Text = texto;
-        }
-
+                     => this.Text = texto;
         private void AjustarTamanhoDoGrid()
         {
 
@@ -122,6 +143,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -129,16 +151,11 @@ namespace View.UI.ViewProduto
         }
 
         private void InstanciarProdutoRepositorio()
-        {
-            _produtoRepositorio = new ProdutoRepositorio();
-        }
-
+                     => _produtoRepositorio = new ProdutoRepositorio();
         private void rdbNome_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-
-
                 MudarTextoDoGroupBox(texto: "Pesquisar pelo Nome do produto");
                 this.FocoNoTxt(txt: txtPesquisar);
                 LimparTxt(txt: txtPesquisar);
@@ -149,6 +166,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
@@ -171,6 +189,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
@@ -200,19 +219,19 @@ namespace View.UI.ViewProduto
                             }
                             break;
                         case "Código [F2]":
-                           
-                                if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
-                                {
-                                    _produtoRepositorio.SelectProdutoPeloCodigoTodos(dgv: dgvProdutos, codigo: txtPesquisar.Text);
-                                }
-                                else if (_enumTipoPesquisa == EnumTipoPesquisa.ProdutoTerminal)
-                                {
-                                    _produtoRepositorio.SelectProdutoPeloCodigoTodos(dgv: dgvProdutos, codigo: txtPesquisar.Text);
-                                }
-                                else
-                                {
-                                    _produtoRepositorio.SelectProdutoPeloCodigoEstoque(dgv: dgvProdutos, codigo: txtPesquisar.Text);
-                                }                                
+
+                            if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
+                            {
+                                _produtoRepositorio.SelectProdutoPeloCodigoTodos(dgv: dgvProdutos, codigo: txtPesquisar.Text);
+                            }
+                            else if (_enumTipoPesquisa == EnumTipoPesquisa.ProdutoTerminal)
+                            {
+                                _produtoRepositorio.SelectProdutoPeloCodigoTodos(dgv: dgvProdutos, codigo: txtPesquisar.Text);
+                            }
+                            else
+                            {
+                                _produtoRepositorio.SelectProdutoPeloCodigoEstoque(dgv: dgvProdutos, codigo: txtPesquisar.Text);
+                            }
                             break;
                         case "Categoria [F3]":
                             if (_enumTipoPesquisa == EnumTipoPesquisa.Produto)
@@ -239,6 +258,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -276,6 +296,7 @@ namespace View.UI.ViewProduto
         {
             try
             {
+                ValidatorField.AllowOneSpaceTogether(e, sender);
                 if ((Keys)e.KeyChar == Keys.Enter)
                 {
                     InstanciarProdutoRepositorio();
@@ -304,6 +325,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -313,35 +335,6 @@ namespace View.UI.ViewProduto
         {
             try
             {
-
-
-                //int contador = 0;
-                //foreach (DataGridViewRow row in dgvProdutos.Rows)
-                //{
-                //    if (Convert.ToInt32(row.Cells["Preço"].Value) <= 0)
-                //    {
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.BackColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.ForeColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.SelectionBackColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.SelectionForeColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.BackColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.ForeColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.SelectionBackColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.SelectionForeColor = Color.Yellow;
-                //    }
-                //    else
-                //    {
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.BackColor = Color.White;
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.ForeColor = Color.Black;
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.SelectionBackColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Preço"].Style.SelectionForeColor = Color.Black;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.BackColor = Color.White;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.ForeColor = Color.Black;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.SelectionBackColor = Color.Yellow;
-                //        dgvProdutos.Rows[contador].Cells["Estoque"].Style.SelectionForeColor = Color.Black;
-                //    }
-                //    contador++;
-                //}
                 (sender as DataGridView).DefaultCellStyle.Format = "C2";
 
             }
@@ -351,6 +344,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -371,6 +365,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
@@ -391,6 +386,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
         }
@@ -427,6 +423,7 @@ namespace View.UI.ViewProduto
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -436,10 +433,7 @@ namespace View.UI.ViewProduto
         {
             try
             {
-
-
                 return Convert.ToInt32(dgvProdutos.CurrentRow.Cells["ID"].Value);
-
             }
             catch (CustomException erro)
             {

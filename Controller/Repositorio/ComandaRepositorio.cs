@@ -13,9 +13,25 @@ namespace Controller.Repositorio
         private _DbContext _banco;
         private const bool Existe = true, NaoExiste = false;
         private void InstanciarBanco()
+                     => _banco = new _DbContext();
+
+        public Comanda GetIDPeloCodigo(string codigo)
         {
 
-            _banco = new _DbContext();
+            try
+            {
+                InstanciarBanco();
+                return _banco.Comanda.FirstOrDefault(c => c.Codigo == codigo);
+            }
+            catch (CustomException error)
+            {
+                throw new CustomException(error.Message);
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+
         }
         public List<Comanda> Inserir(List<Comanda> comandList, Comanda comanda)
         {
@@ -75,7 +91,7 @@ namespace Controller.Repositorio
             try
             {
                 InstanciarBanco();
-                return _banco.Comanda.FirstOrDefault(c => c.ID == comanda.ID) != null ? Existe : NaoExiste;
+                return _banco.Comanda.FirstOrDefault(c => c.Codigo == comanda.Codigo) != null ? Existe : NaoExiste;
 
             }
             catch (CustomException erro)
@@ -105,34 +121,6 @@ namespace Controller.Repositorio
             {
                 throw new Exception(erro.Message);
             }
-
-
         }
-
-        /*public void PesquisarPorCodigoSelecionar(DataGridView dgv, string codigoComanda)
-        {
-            try
-            {
-                InstanciarBanco();
-                dgv.DataSource = _banco.Comanda.ToList(); (from ven in _banco.VendaComComandaAtiva
-                                  join com in _banco.Comanda
-                                  on ven.IDComanda equals com.ID
-                                  select new
-                                  {
-                                      ID = com.ID,
-                                      Código = com.Codigo,
-                                      Valor = ven.PrecoTotal
-                                  }).ToList();
-
-            }
-            catch (CustomException erro)
-            {
-                throw new CustomException(erro.Message);
-            }
-            catch (Exception erro)
-            {
-                throw new Exception(erro.Message);
-            }
-        }*/
     }
 }

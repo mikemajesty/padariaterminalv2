@@ -34,7 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ptbIdDaComanda = new System.Windows.Forms.PictureBox();
             this.btnModificarComanda = new System.Windows.Forms.Button();
-            this.txtIDdaComanda = new System.Windows.Forms.TextBox();
+            this.txtCodigoDaComanda = new System.Windows.Forms.TextBox();
             this.ltvProdutos = new System.Windows.Forms.ListView();
             this.gpbTotal = new System.Windows.Forms.GroupBox();
             this.lblTotalVenda = new System.Windows.Forms.Label();
@@ -70,14 +70,14 @@
             this.gpbSelecionarIDDaComanda.Controls.Add(this.label1);
             this.gpbSelecionarIDDaComanda.Controls.Add(this.ptbIdDaComanda);
             this.gpbSelecionarIDDaComanda.Controls.Add(this.btnModificarComanda);
-            this.gpbSelecionarIDDaComanda.Controls.Add(this.txtIDdaComanda);
+            this.gpbSelecionarIDDaComanda.Controls.Add(this.txtCodigoDaComanda);
             this.gpbSelecionarIDDaComanda.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gpbSelecionarIDDaComanda.Location = new System.Drawing.Point(4, 12);
             this.gpbSelecionarIDDaComanda.Name = "gpbSelecionarIDDaComanda";
             this.gpbSelecionarIDDaComanda.Size = new System.Drawing.Size(427, 89);
             this.gpbSelecionarIDDaComanda.TabIndex = 0;
             this.gpbSelecionarIDDaComanda.TabStop = false;
-            this.gpbSelecionarIDDaComanda.Text = "Selecione a comanda pelo ID";
+            this.gpbSelecionarIDDaComanda.Text = "Selecione a comanda pelo Código";
             // 
             // label1
             // 
@@ -112,17 +112,17 @@
             this.btnModificarComanda.UseVisualStyleBackColor = true;
             this.btnModificarComanda.Click += new System.EventHandler(this.btnModificarComanda_Click);
             // 
-            // txtIDdaComanda
+            // txtCodigoDaComanda
             // 
-            this.txtIDdaComanda.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIDdaComanda.Location = new System.Drawing.Point(38, 34);
-            this.txtIDdaComanda.MaxLength = 3;
-            this.txtIDdaComanda.Name = "txtIDdaComanda";
-            this.txtIDdaComanda.Size = new System.Drawing.Size(231, 38);
-            this.txtIDdaComanda.TabIndex = 0;
-            this.txtIDdaComanda.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtIDdaComanda.DoubleClick += new System.EventHandler(this.txtIDdaComanda_DoubleClick);
-            this.txtIDdaComanda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtIDdaComanda_KeyPress);
+            this.txtCodigoDaComanda.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodigoDaComanda.Location = new System.Drawing.Point(38, 34);
+            this.txtCodigoDaComanda.MaxLength = 20;
+            this.txtCodigoDaComanda.Name = "txtCodigoDaComanda";
+            this.txtCodigoDaComanda.Size = new System.Drawing.Size(231, 38);
+            this.txtCodigoDaComanda.TabIndex = 0;
+            this.txtCodigoDaComanda.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCodigoDaComanda.DoubleClick += new System.EventHandler(this.txtIDdaComanda_DoubleClick);
+            this.txtCodigoDaComanda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtIDdaComanda_KeyPress);
             // 
             // ltvProdutos
             // 
@@ -155,7 +155,7 @@
             // 
             // lblTotalVenda
             // 
-            this.lblTotalVenda.Font = new System.Drawing.Font("Showcard Gothic", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalVenda.Font = new System.Drawing.Font("Arial Narrow", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalVenda.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.lblTotalVenda.Location = new System.Drawing.Point(6, 22);
             this.lblTotalVenda.Name = "lblTotalVenda";
@@ -366,7 +366,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gpbSelecionarIDDaComanda;
-        private System.Windows.Forms.TextBox txtIDdaComanda;
+        private System.Windows.Forms.TextBox txtCodigoDaComanda;
         private System.Windows.Forms.ListView ltvProdutos;
         private System.Windows.Forms.PictureBox ptbIdDaComanda;
         private System.Windows.Forms.GroupBox gpbTotal;

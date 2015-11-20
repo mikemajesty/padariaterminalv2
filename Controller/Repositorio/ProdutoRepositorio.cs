@@ -31,9 +31,7 @@ namespace Controller.Repositorio
         }
 
         private void InstanciarBanco()
-        {
-            _banco = new _DbContext();
-        }
+                     => _banco = new _DbContext();
         public int Alterar(Produto produto)
         {
             try
@@ -93,12 +91,12 @@ namespace Controller.Repositorio
                                    select new
                                    {
                                        ID = prod.ID,
-                                       Codigo = prod.Codigo,
+                                       Código = prod.Codigo,
                                        Nome = prod.Nome,
                                        Categoria = cat.Nome,
                                        Preço = prod.PrecoVenda,
                                        Estoque = prod.GerenciarEstoque
-                                   }).Where(c => c.Codigo == codigo).OrderBy(c => c.Nome).ToList());
+                                   }).Where(c => c.Código == codigo).OrderBy(c => c.Nome).ToList());
 
                 if (dgv.Rows.Count == 0)
                 {
@@ -384,12 +382,7 @@ namespace Controller.Repositorio
         }
 
         private void InstanciarTipoCadastroRepositorio()
-        {
-            _tipoCadastroRepositorio = new TipoCadastroRepositorio();
-        }
-
-
-
+                     => _tipoCadastroRepositorio = new TipoCadastroRepositorio();
         public Produto AdicionarProdutoNoListViewSemComanda(ListView ltv, string codigo, int quantidade)
         {
             try

@@ -16,16 +16,14 @@ namespace UI.View.UI.ViewComanda
             InitializeComponent();
         }
         private void InstanciarComandaRepositorio()
-        {
-            _comandaRepositorio = new ComandaRepositorio();
-        }
+                     => _comandaRepositorio = new ComandaRepositorio();
         private void txtPesquisar_TextChanged(object sender, EventArgs e)
         {
 
             try
             {
                 PesquisarECarregar();
-               
+
             }
             catch (CustomException erro)
             {
@@ -33,6 +31,7 @@ namespace UI.View.UI.ViewComanda
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -56,18 +55,72 @@ namespace UI.View.UI.ViewComanda
             }
             catch (Exception error)
             {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
 
 
         }
-
-        private void txtPesquisar_KeyPress(object sender, KeyPressEventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            ValidatorField.IntegerAndLetter(e);
+            switch (keyData)
+            {
+                case Keys.Enter:
+                    if (dgvComanda.Rows.Count > 0)
+                    {
+                        var codigo = (string)dgvComanda.GetSelectRow(0, "Código");
+                        InstanciarComandaRepositorio();
+                        if (_comandaRepositorio.GetQuantidade() > 0)
+                        {
+                            Comanda.CodigoStatic = "";
+                            Comanda.CodigoStatic = codigo;
+                            this.DialogResult = Comanda.CodigoStatic != "" ? DialogResult.Yes : DialogResult.No;
+                        }
+                        else
+                        {
+                            MyErro.MyCustomException("Não existe comanda cadastrada.");
+                        }
 
+                    }
+                    break;
+                case Keys.Up:
+                    dgvComanda.MoveToUp();
+                    break;
+                case Keys.Down:
+                    dgvComanda.MoveToDown();
+                    break;
+                case Keys.F1:
+                    break;
+                case Keys.F2:
+                    break;
+                case Keys.F3:
+                    break;
+                case Keys.F4:
+                    break;
+                case Keys.F5:
+                    break;
+                case Keys.F6:
+                    break;
+                case Keys.F7:
+                    break;
+                case Keys.F8:
+                    break;
+                case Keys.F9:
+                    break;
+                case Keys.F10:
+                    break;
+                case Keys.F11:
+                    break;
+                case Keys.F12:
+                    break;
+                case Keys.Escape:
+                    this.Close();
+                    break;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
-
+        private void txtPesquisar_KeyPress(object sender, KeyPressEventArgs e)
+                     => ValidatorField.IntegerAndLetter(e);
         private void frmPesquisarComanda_Load(object sender, EventArgs e)
         {
 
@@ -82,6 +135,7 @@ namespace UI.View.UI.ViewComanda
             }
             catch (Exception erro)
             {
+                SaveErroInTxt.RecordInTxt(erro, this.GetType().Name);
                 DialogMessage.MessageComButtonOkIconeErro(erro.Message, "Erro");
             }
 
@@ -90,11 +144,25 @@ namespace UI.View.UI.ViewComanda
         private void AjustarTamanhoDoGrid()
         {
 
-            dgvComanda.AjustartamanhoDoDataGridView(new List<TamanhoGrid>()
+            try
+            {
+                dgvComanda.AjustartamanhoDoDataGridView(new List<TamanhoGrid>()
                 {
                     new TamanhoGrid(){ ColunaNome = "ID", Tamanho = 173},
                     new TamanhoGrid(){ ColunaNome = "Código" , Tamanho=250}
                 });
+
+            }
+            catch (CustomException error)
+            {
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+            catch (Exception error)
+            {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
+                DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
+            }
+
 
         }
 
@@ -108,22 +176,15 @@ namespace UI.View.UI.ViewComanda
                 {
                     if (_comandaRepositorio.GetQuantidade() > 0)
                     {
-                        Comanda.StaticID = Convert.ToInt32(dgvComanda.CurrentRow.Cells["ID"].Value);
-                        if (Comanda.StaticID > 0)
-                        {
-                            this.DialogResult = DialogResult.Yes;
-                        }
-                        else
-                        {
-                            this.DialogResult = DialogResult.No;
-                        }
+                        Comanda.CodigoStatic = dgvComanda.CurrentRow.Cells["Código"].Value.ToString();
+                        this.DialogResult = Comanda.CodigoStatic != "" ? DialogResult.Yes : DialogResult.No;
                     }
                     else
                     {
                         MyErro.MyCustomException("Não existe comanda cadastrada.");
                     }
                 }
-              
+
             }
             catch (CustomException error)
             {
@@ -131,6 +192,7 @@ namespace UI.View.UI.ViewComanda
             }
             catch (Exception error)
             {
+                SaveErroInTxt.RecordInTxt(error, this.GetType().Name);
                 DialogMessage.MessageFullComButtonOkIconeDeInformacao(message: error.Message, title: "Aviso");
             }
 

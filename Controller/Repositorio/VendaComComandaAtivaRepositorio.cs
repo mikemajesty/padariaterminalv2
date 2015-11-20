@@ -12,9 +12,7 @@ namespace Controller.Repositorio
     {
         private _DbContext _banco;
         private void InstanciaBanco()
-        {
-            _banco = new _DbContext();
-        }
+                     => _banco = new _DbContext();
         public void GetItensnaComandaPorID(int ID, ListView ltv)
         {
 
@@ -93,8 +91,6 @@ namespace Controller.Repositorio
                     listView.SubItems.Add("" + item.LucroTotal);
                     ltv.Items.Add(listView);
                 }
-
-
             }
             catch (CustomException erro)
             {
@@ -158,9 +154,40 @@ namespace Controller.Repositorio
 
         }
 
+        public void GetItensnaComandaPorCodigo(string codigo, ListView ltvProdutos)
+        {
 
+            try
+            {
+                InstanciaBanco();
+                IQueryable<dynamic> _venda = (from venda in _banco.VendaComComandaAtiva
+                                              join comanda in _banco.Comanda on venda.IDComanda equals
+                                                  comanda.ID
+                                              join prod in _banco.Produto on venda.IDProduto equals prod.ID
+                                              where comanda.Codigo == codigo
+                                              select new
+                                              {
+                                                  Nome = prod.Nome,
+                                                  Codigo = prod.Codigo,
+                                                  Quantidade = venda.Quantidade,
+                                                  Total = venda.PrecoTotal,
+                                                  LucroTotal =
+                                                  venda.Quantidade == 0 ?
+                                                  ((venda.PrecoTotal * 100) / prod.Porcentagem) :
+                                                  ((prod.PrecoVenda - prod.PrecoCompra) * venda.Quantidade)
+                                              });
 
+                AdicionarItensNoListView(ltvProdutos, _venda);
+            }
+            catch (CustomException error)
+            {
+                throw new CustomException(error.Message);
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
 
-
+        }
     }
 }
