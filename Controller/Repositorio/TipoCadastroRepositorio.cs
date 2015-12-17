@@ -3,6 +3,7 @@ using Model.Data;
 using Model.Entidades;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -60,7 +61,7 @@ namespace Controller.Repositorio
                 {
                     foreach (TipoCadastro tipo in TipoDeCadastroList())
                     {
-                        _banco.Entry(tipo).State = System.Data.Entity.EntityState.Added;
+                        _banco.Entry(tipo).State = EntityState.Added;
                         contador += _banco.SaveChanges();
                     }
                 }

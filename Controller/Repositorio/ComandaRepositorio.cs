@@ -72,7 +72,14 @@ namespace Controller.Repositorio
             try
             {
                 InstanciarBanco();
-                dgv.DataSource = (from com in _banco.Comanda where com.Codigo.Contains(codigoComanda) select new { ID = com.ID, Código = com.Codigo }).ToList();
+                dgv.DataSource =
+                    (from com in _banco.Comanda
+                     where com.Codigo.Contains(codigoComanda)
+                     select new
+                     {
+                         ID = com.ID,
+                         Código = com.Codigo
+                     }).ToList();
 
             }
             catch (CustomException error)
@@ -91,7 +98,8 @@ namespace Controller.Repositorio
             try
             {
                 InstanciarBanco();
-                return _banco.Comanda.FirstOrDefault(c => c.Codigo == comanda.Codigo) != null ? Existe : NaoExiste;
+                return _banco.Comanda.FirstOrDefault(c => c.Codigo == comanda.Codigo) 
+                       != null ? Existe : NaoExiste;
 
             }
             catch (CustomException erro)

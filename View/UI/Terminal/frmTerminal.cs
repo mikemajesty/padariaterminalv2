@@ -376,7 +376,7 @@ namespace View.UI.ViewTerminal
 
             try
             {
-
+              
                 if (ckbPorPeso.Checked)
                 {
                     VenderPorPeso(codigo);
@@ -473,8 +473,8 @@ namespace View.UI.ViewTerminal
                     InstanciarProdutoRepositorio();
                     InstanciarVendaComComandaAtivaRepositorio();
                     InstanciarComandaRepositorio();                    
-                    Produto produto = _produtoRepositorio.AdicionarProdutoNoListViewSemComanda(ltv: ltvProdutos, codigo: codigo, quantidade: Convert.ToInt32(txtQuantidade.Text));
-
+                    Produto produto = _produtoRepositorio
+                        .AdicionarProdutoNoListViewSemComanda(ltv: ltvProdutos, codigo: codigo, quantidade: Convert.ToInt32(txtQuantidade.Text));
                     if (produto != null)
                     {
                         _vendaComComandaATivaRepositorio.Cadastrar(new VendaComComandaAtiva()

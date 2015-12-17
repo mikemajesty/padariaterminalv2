@@ -582,9 +582,9 @@ namespace Controller.Repositorio
 
 
             }
-
+             
             catch (CustomException erro)
-            {
+            { 
                 throw new CustomException(erro.Message);
             }
             catch (Exception erro)
