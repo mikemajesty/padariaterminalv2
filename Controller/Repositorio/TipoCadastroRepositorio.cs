@@ -19,8 +19,8 @@ namespace Controller.Repositorio
             try
             {
                 InstanciarBanco();
-                TipoCadastro tipoCadastro = _banco.TipoCadastro.Find(TipoCadastroID);
-                return tipoCadastro.Nome;
+               return _banco.TipoCadastro.Find(TipoCadastroID)?.Nome;
+              
             }
             catch (CustomException erro)
             {

@@ -43,13 +43,9 @@ namespace Controller.Repositorio
                 if ((com = _banco.Comanda.FirstOrDefault(c => c.ID == comanda.ID)) != null)
                 {
                     if (!comandList.Any(c => c.ID == com.ID))
-                    {
                         comandList.Add(com);
-                    }
                     else
-                    {
                         MyErro.MyCustomException("Comanda já foi adicionada");
-                    }
                 }
 
                 return comandList;

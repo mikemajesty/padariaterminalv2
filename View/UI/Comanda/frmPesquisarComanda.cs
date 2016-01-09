@@ -77,10 +77,7 @@ namespace UI.View.UI.ViewComanda
                             this.DialogResult = Comanda.CodigoStatic != "" ? DialogResult.Yes : DialogResult.No;
                         }
                         else
-                        {
                             MyErro.MyCustomException("Não existe comanda cadastrada.");
-                        }
-
                     }
                     break;
                 case Keys.Up:
@@ -180,9 +177,7 @@ namespace UI.View.UI.ViewComanda
                         this.DialogResult = Comanda.CodigoStatic != "" ? DialogResult.Yes : DialogResult.No;
                     }
                     else
-                    {
                         MyErro.MyCustomException("Não existe comanda cadastrada.");
-                    }
                 }
 
             }
